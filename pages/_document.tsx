@@ -31,10 +31,10 @@ class MyDocument extends Document {
           type="image/svg"
           href="https://market.reservoir.tools/reservoir.svg"
         />
-        <title>Reservoir Market | Open Source NFT Marketplace</title>
+        <title>LUX Market | Open Source NFT Marketplace</title>
         <meta
           name="description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
+          content="LUX Market is an open source NFT marketplace built on LUX Network."
         />
         <meta name="keywords" content="NFT, API, Protocol" />
         {/* Twitter */}
@@ -43,36 +43,36 @@ class MyDocument extends Document {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="LUX Market | Open Source NFT Marketplace"
         />
         <meta
           name="twitter:description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
+          content="LUX Market is an open source NFT marketplace built on LUX Network."
         />
-        <meta name="twitter:site" content="@reservoir0x" />
+        <meta name="twitter:site" content="@luxdefi" />
 
         {/* OG - https://ogp.me/ */}
         {/* https://www.opengraph.xyz/ */}
         <meta
           name="og:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="LUX Market | Open Source NFT Marketplace"
         />
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
         <meta property="og:locale" content="en" />
         <meta
           property="og:description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
+          content="LUX Market is an open source NFT marketplace built on LUX Network."
         />
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
         {/* <meta property="og:image" content={OG_IMAGE} /> */}
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="640" />
-        <meta property="og:image:alt" content="Reservoir Market Banner" />
+        <meta property="og:image:alt" content="LUX Market Banner" />
 
-        {/* Reservoir Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
-        <meta property="reservoir:title" content="Reservoir Market" />
+        {/* LUX Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
+        <meta property="reservoir:title" content="LUX Market" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
