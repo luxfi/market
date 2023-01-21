@@ -40,9 +40,9 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary6: '$violet6',
         primary7: '$violet7',
         primary8: '$violet8',
-        primary9: '$violet9',
+        primary9: 'white',
         primary10: '#ddd',
-        primary11: '$violet11',
+        primary11: '#333',
         primary12: '$violet12',
 
         //Secondary
@@ -240,9 +240,9 @@ export const darkTheme = createTheme({
     primary6: '$violet6',
     primary7: '$violet7',
     primary8: '$violet8',
-    primary9: '$violet9',
+    primary9: 'white',
     primary10: '#ddd',
-    primary11: '$violet11',
+    primary11: '#ccc',
     primary12: '$violet12',
 
     //Secondary
@@ -263,15 +263,15 @@ export const darkTheme = createTheme({
     gray1: '$slate1',
     gray2: '$slate2',
     gray3: '#111',
-    gray4: '$slate4',
+    gray4: '#111',
     gray5: '$slate5',
     gray6: '$slate6',
-    gray7: '$slate7',
+    gray7: '#333',
     gray8: '$slate8',
     gray9: '$slate9',
     gray10: '$slate10',
     gray11: '$slate11',
-    gray12: '$slate12',
+    gray12: '#eee',
 
     accent: '#7000FF',
 
