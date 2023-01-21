@@ -68,7 +68,7 @@ const Button = styled('button', {
         borderRadius: 0,
       },
       rounded: {
-        borderRadius: 8,
+        borderRadius: 10,
       },
       pill: {
         borderRadius: 99999,
