@@ -262,7 +262,7 @@ export const darkTheme = createTheme({
     //Gray
     gray1: '$slate1',
     gray2: '$slate2',
-    gray3: '$slate3',
+    gray3: '#111',
     gray4: '$slate4',
     gray5: '$slate5',
     gray6: '$slate6',
@@ -275,11 +275,11 @@ export const darkTheme = createTheme({
 
     accent: '#7000FF',
 
-    neutralBgSubtle: '$gray3',
-    neutralBg: '$gray1',
+    neutralBgSubtle: '#111',
+    neutralBg: 'black',
 
-    panelBg: '$gray3',
-    panelBorder: '$slate7',
+    panelBg: '#111',
+    panelBorder: 'black',
     panelShadow: 'transparent',
   },
 })

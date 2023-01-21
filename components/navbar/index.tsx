@@ -57,9 +57,11 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href="https://lux.market">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+              <span style={{fontSize: '32px'}}>
+                {`▼`}
+              </span>
             </Box>
           </Link>
         </Flex>
@@ -92,16 +94,11 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
-              {theme == 'dark' ? (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
-              ) : (
-                <img
-                  src="/reservoirMarketLogoLight.svg"
-                  style={{ width: '100%' }}
-                />
-              )}
+          <Link href="https://lux.market">
+            <Box css={{ width: 22, cursor: 'pointer' }}>
+              <span style={{fontSize: '22px'}}>
+                {`▼`}
+              </span>
             </Box>
           </Link>
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>

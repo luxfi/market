@@ -25,17 +25,18 @@ const Button = styled('button', {
   variants: {
     color: {
       primary: {
-        backgroundColor: '$primary9',
-        color: 'white',
+        backgroundColor: 'white',
+        color: 'black',
         '&:hover': {
           backgroundColor: '$primary10',
         },
       },
       secondary: {
-        backgroundColor: '$secondary4',
+        backgroundColor: 'black',
+        border: '1px solid white',
         color: '$primary12',
         '&:hover': {
-          backgroundColor: '$secondary5',
+          backgroundColor: 'gray',
         },
       },
       gray3: {

@@ -23,7 +23,7 @@ export const reset = {
     '-webkit-text-size-adjust': '100%' /* 2 */,
     '-moz-tab-size': 4 /* 3 */,
     tabSize: 4 /* 3 */,
-    fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` /* 4 */,
+    fontFamily: `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` /* 4 */,
     overflowY: 'scroll'
   },
 
