@@ -185,7 +185,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Logout
+                Disconnect
               </Text>
               <Box css={{ color: '$gray10' }}>
                 <FontAwesomeIcon

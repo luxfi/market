@@ -82,7 +82,7 @@ export const ProfileDropdown: FC = () => {
           }}
           onClick={() => disconnect()}
         >
-          <Text style="body1">Logout</Text>
+          <Text style="body1">Disconnect</Text>
           <Box css={{ color: '$gray10' }}>
             <FontAwesomeIcon icon={faRightFromBracket} width={16} height={16} />
           </Box>
