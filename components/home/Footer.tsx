@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Text, Box, Flex, Anchor, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faDiscord, faInstagram, faMedium, faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons'
 
 type SectionTitleProps = {
   title: string
@@ -95,7 +95,7 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join LUX Community" />
+        <SectionTitle title="Community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
@@ -109,10 +109,37 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
+            href="https://instagram.com/luxdefi"
+          >
+            <Button size="xs" color="gray3">
+              <FontAwesomeIcon icon={faInstagram} width={14} height={14} />
+            </Button>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://medium.com/luxdefi"
+          >
+            <Button size="xs" color="gray3">
+              <FontAwesomeIcon icon={faMedium} width={14} height={14} />
+            </Button>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
             href="https://discord.gg/GPyuT6z9N3"
           >
             <Button size="xs" color="gray3">
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
+            </Button>
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://t.me/luxdefi"
+          >
+            <Button size="xs" color="gray3">
+              <FontAwesomeIcon icon={faTelegram} width={14} height={14} />
             </Button>
           </a>
         </Flex>
