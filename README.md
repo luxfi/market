@@ -1,7 +1,7 @@
 <h3 align="center">Lux Finance [BETA]</h3>
   <p align="center">
 
-At [Lux Partners](https://lux.partners), we're building the future of real world assets.
+At [Lux](https://lux.partners), we're building the future of real world assets.
 
 Lux Finance is an open source protocol built on the best in DeFi.
 
