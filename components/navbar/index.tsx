@@ -119,7 +119,7 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/'}>Assets</NavItem>
             </Link>
 
-            <Link href="https://lux.credit" prefetch>
+            <Link href="/credit" prefetch>
               <NavItem active={router.pathname == '/credit'}>Credit</NavItem>
             </Link>
 
