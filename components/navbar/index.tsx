@@ -108,7 +108,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search assets and addresses"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -140,7 +140,7 @@ const Navbar = () => {
             */}
 
             <Link href="/portfolio" onClick={loadPortfolio} prefetch>
-              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Portfolio</NavItem>
             </Link>
 
             <Link href="https://docs.lux.network" prefetch>
