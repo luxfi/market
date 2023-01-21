@@ -113,18 +113,37 @@ const Navbar = () => {
               key={router.asPath}
             />
           </Box>
+
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/">
-              <NavItem active={router.pathname == '/'}>Explore</NavItem>
+              <NavItem active={router.pathname == '/'}>Assets</NavItem>
             </Link>
+
+            <Link href="https://lux.credit" prefetch>
+              <NavItem active={router.pathname == '/credit'}>Credit</NavItem>
+            </Link>
+
+            <Link href="/earn" prefetch>
+              <NavItem active={router.pathname == '/earn'}>Earn</NavItem>
+            </Link>
+
             <Link href="https://lux.town">
-              <NavItem active={false}>Mint</NavItem>
+              <NavItem active={router.pathname == '/mint'}>Mint</NavItem>
+            </Link>
+
+            <Link href="/swap" prefetch>
+              <NavItem active={router.pathname == '/swap'}>Swap</NavItem>
             </Link>
 
             <Link href="/portfolio" onClick={loadPortfolio} prefetch>
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
+            </Link>
+
+            <Link href="https://docs.lux.network" prefetch>
+              <NavItem active={router.pathname == '/docs'}>?</NavItem>
             </Link>
           </Flex>
+
         </Flex>
       </Box>
 
