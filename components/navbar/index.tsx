@@ -113,11 +113,11 @@ const Navbar = () => {
             <Link href="/">
               <NavItem active={router.pathname == '/'}>Explore</NavItem>
             </Link>
+            <Link href="https://lux.town">
+              <NavItem active={false}>Mint</NavItem>
+            </Link>
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
             </Link>
           </Flex>
         </Flex>
