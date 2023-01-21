@@ -37,7 +37,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary2: '$violet2',
         primary3: '$violet3',
         primary4: '$violet4',
-        primary5: '#ddd',
+        primary5: '#e3e6ea',
         primary6: '$violet6',
         primary7: '$violet7',
         primary8: '$violet8',

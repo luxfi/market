@@ -35,12 +35,12 @@ const Button = styled('button', {
         },
       },
       secondary: {
-        backgroundColor: '$accent1',
-        border: '2px solid $primary1',
+        backgroundColor: '$gray4',
+        border: '2px solid transparent',
         color: '$primary1',
         '&:hover': {
           backgroundColor: '$primary1',
-          border: '2px solid $primary1',
+          border: '2px solid transparent',
           color: '$accent1',
         },
       },
