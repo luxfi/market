@@ -50,7 +50,7 @@ const DropdownMenuItem = styled(DropdownMenuPrimitive.DropdownMenuItem, {
   fontFamily: '$body',
   color: '$gray12',
   px: '$2',
-  py: '$4',
+  py: '$3',
   borderRadius: 8,
   outline: 'none',
   cursor: 'pointer',

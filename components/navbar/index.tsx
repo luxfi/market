@@ -19,6 +19,10 @@ import { ProfileDropdown } from './ProfileDropdown'
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
+const loadPortfolio = () => {
+  document.location = '/portfolio'
+}
+
 const Navbar = () => {
   const { theme } = useTheme()
   const { isConnected } = useAccount()
@@ -57,7 +61,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="https://lux.market">
+          <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <span style={{fontSize: '32px'}}>
                 {`▼`}
@@ -94,7 +98,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="https://lux.market">
+          <Link href="/">
             <Box css={{ width: 22, cursor: 'pointer' }}>
               <span style={{fontSize: '22px'}}>
                 {`▼`}
@@ -116,7 +120,8 @@ const Navbar = () => {
             <Link href="https://lux.town">
               <NavItem active={false}>Mint</NavItem>
             </Link>
-            <Link href="/portfolio">
+
+            <Link href="/portfolio" onClick={loadPortfolio} prefetch>
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
           </Flex>

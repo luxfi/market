@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, forwardRef } from 'react'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
@@ -44,13 +44,13 @@ export const ProfileDropdown: FC = () => {
     </Button>
   )
 
+  const loadPortfolio = () => {
+    document.location = '/portfolio'
+  }
+
   const children = (
     <>
-      <DropdownMenuItem
-        onClick={(e) => {
-          e.preventDefault()
-        }}
-      >
+      <DropdownMenuItem>
         <Link href={`/profile/${address}`} style={{ flex: 1 }}>
           <Flex justify="between" align="center" css={{ width: '100%' }}>
             <Text style="body1">
@@ -59,9 +59,13 @@ export const ProfileDropdown: FC = () => {
           </Flex>
         </Link>
       </DropdownMenuItem>
-      <Link href={`/portfolio`}>
-        <DropdownMenuItem>Portfolio</DropdownMenuItem>
-      </Link>
+
+      <DropdownMenuItem onClick={loadPortfolio}>
+        <Flex justify="between">
+          {`Portfolio`}
+        </Flex>
+      </DropdownMenuItem>
+
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
           Balance
