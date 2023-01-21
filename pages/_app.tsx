@@ -127,13 +127,23 @@ function MyApp({
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
-        rainbowLightTheme({
-          accentColor: 'white',
-          accentColorForeground: 'black',
-          borderRadius: 'medium',
-          fontStack: 'system',
-          overlayBlur: 'small',
-        })
+        Object.assign({},
+          rainbowLightTheme({
+              borderRadius: 'medium',
+              fontStack: 'system',
+              overlayBlur: 'small',
+          }),
+          {
+            colors: {
+              actionButtonSecondaryBackground: '#000',
+              actionButtonBorder: '#111',
+              closeButton: 'black',
+              closeButtonBackground: 'white',
+              modalBackground: '#111',
+              modalBorder: '#111',
+            }
+          }
+        )
       )
     }
   }, [theme])

@@ -32,17 +32,17 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         ...green,
 
         //Primary
-        primary1: '$violet1',
+        accent1: 'white',
+        primary1: 'black',
         primary2: '$violet2',
         primary3: '$violet3',
         primary4: '$violet4',
-        primary5: '#222',
+        primary5: '#ddd',
         primary6: '$violet6',
         primary7: '$violet7',
         primary8: '$violet8',
-        primary9: 'white',
-        primary10: '#ddd',
-        primary11: '#333',
+        primary9: '#ccc',
+        primary10: '#222',
         primary12: '$violet12',
 
         //Secondary
@@ -232,7 +232,8 @@ export const darkTheme = createTheme({
     slate2: '#111',
 
     //Primary
-    primary1: '$violet1',
+    accent1: 'black',
+    primary1: 'white',
     primary2: '$violet2',
     primary3: '$violet3',
     primary4: '$violet4',
