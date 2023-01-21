@@ -43,10 +43,10 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary8: '$violet8',
         primary9: '#ccc',
         primary10: '#222',
-        primary12: '$violet12',
+        primary12: '#eee',
 
         //Secondary
-        secondary1: '$violetA1',
+        secondary1: 'white',
         secondary2: '$violetA2',
         secondary3: '$violetA3',
         secondary4: '$violetA4',
@@ -268,7 +268,7 @@ export const darkTheme = createTheme({
     gray5: '$slate5',
     gray6: '$slate6',
     gray7: '#333',
-    gray8: '$slate8',
+    gray8: '#222',
     gray9: '$slate9',
     gray10: '$slate10',
     gray11: '$slate11',

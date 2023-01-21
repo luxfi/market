@@ -26,17 +26,22 @@ const Button = styled('button', {
     color: {
       primary: {
         backgroundColor: '$primary1',
+        border: '2px solid $accent1',
         color: '$accent1',
         '&:hover': {
-          backgroundColor: '$primary10',
+          backgroundColor: '$primary1',
+          border: '2px solid $accents1',
+          color: '$accent1',
         },
       },
       secondary: {
-        backgroundColor: 'black',
-        border: '1px solid white',
-        color: '$primary12',
+        backgroundColor: '$accent1',
+        border: '2px solid $primary1',
+        color: '$primary1',
         '&:hover': {
-          backgroundColor: 'gray',
+          backgroundColor: '$primary1',
+          border: '2px solid $accent1',
+          color: '$accent1',
         },
       },
       gray3: {

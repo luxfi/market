@@ -123,16 +123,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           )}
           {showViewAllButton && (
             <Button
+              color="secondary"
               disabled={isValidating}
               onClick={() => {
                 fetchNextPage()
               }}
               css={{
-                minWidth: 224,
+                minWidth: 180,
                 justifyContent: 'center',
                 alignSelf: 'center',
               }}
-              size="large"
             >
               View All
             </Button>
