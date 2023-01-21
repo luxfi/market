@@ -31,8 +31,6 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         ...blackA,
         ...green,
 
-        //Aliases
-
         //Primary
         primary1: '$violet1',
         primary2: '$violet2',
@@ -230,6 +228,8 @@ export const darkTheme = createTheme({
     ...blackA,
 
     //Aliases
+    slate1: '#000',
+    slate2: '#111',
 
     //Primary
     primary1: '$violet1',
