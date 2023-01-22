@@ -16,8 +16,13 @@ import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
-
+import Hero from 'components/home/Hero'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const TOKEN_HREF = '/collections/0x31e0f919c67cedd2bc3e294340dc900735810311/'
+const LEARN_MORE_HREF='https://lux.market/uranium'
+const VIDEO_HEIGHT = 400 
+const VIDEO_ASPECT_RATIO=0.9362
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
@@ -78,14 +83,24 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
-          p: 24,
+          px: 24,
+          pt: 16,
+          pb: 24,
           height: '100%',
           '@bp800': {
-            p: '$6',
+            px: '$6',
+            pt: '$3',
+            pb: '$6',
           },
         }}
       >
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+        <Flex css={{ gap: 20 }} direction="column" >
+          <Hero 
+            tokenHref={TOKEN_HREF} 
+            learnMoreHref={LEARN_MORE_HREF} 
+            videoWidth={VIDEO_HEIGHT * VIDEO_ASPECT_RATIO}
+            videoHeight={VIDEO_HEIGHT}
+          />
           <Flex
             justify="between"
             align="start"
@@ -98,15 +113,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               },
             }}
           >
-            <Text style="h4" as="h4">
+            <Text style="h4" color='light'>
               Popular Collections
             </Text>
             <TrendingCollectionsTimeToggle
               compact={compactToggleNames && isMounted}
               option={sortByTime}
-              onOptionSelected={(option) => {
-                setSortByTime(option)
-              }}
+              onOptionSelected={(option) => {setSortByTime(option)}}
             />
           </Flex>
           {isSSR || !isMounted ? null : (
@@ -124,13 +137,12 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           {showViewAllButton && (
             <Button
               disabled={isValidating}
-              onClick={() => {
-                fetchNextPage()
-              }}
+              onClick={fetchNextPage}
               css={{
                 minWidth: 224,
                 justifyContent: 'center',
                 alignSelf: 'center',
+                mb: '$4'
               }}
               size="large"
             >

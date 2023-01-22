@@ -25,10 +25,10 @@ const ChainSwitcher = () => {
   const chainIcon = supportedChain ? supportedChain.iconUrl : mainnet?.iconUrl
 
   const trigger = (
-    <Button color="gray3" size="small" css={{ py: '$3' }}>
+    <Button color="ghost" corners='rounded' size="small" css={{ py: '$3' }}>
       <img style={{ height: 17 }} src={chainIcon} />
-      {isSmallDevice ? null : <Text style="body1">{chainName}</Text>}
-      <Text css={{ color: '$slate10' }}>
+      {isSmallDevice ? null : <Text css={{ color: '$gray9' }} style="body1">{chainName}</Text>}
+      <Text css={{ color: '$gray9' }}>
         <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
       </Text>
     </Button>
@@ -44,9 +44,9 @@ const ChainSwitcher = () => {
               switchCurrentChain(chainOption.id)
             }}
           >
-            <Flex align="center" css={{ cursor: 'pointer' }}>
+            <Flex align="center" css={{ cursor: 'pointer'}}>
               <img style={{ width: 17 }} src={chainOption.iconUrl} />
-              <Text style="body1" css={{ ml: '$2' }}>
+              <Text style="body1" css={{ ml: '$2', color: '$gray8'  }}>
                 {chainOption.name}
               </Text>
             </Flex>

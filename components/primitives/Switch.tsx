@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'stitches.config'
 import * as SwitchPrimitive from '@radix-ui/react-switch'
 
 const StyledSwitch = styled(SwitchPrimitive.Root, {

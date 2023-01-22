@@ -14,7 +14,7 @@ const DropdownMenuContent = styled(DropdownMenuPrimitive.DropdownMenuContent, {
   p: '$2',
   borderRadius: 8,
   zIndex: 5,
-  background: '$panelBg',
+  backgroundColor: '$panelBg',
   $$borderColor: '$colors$gray7',
   boxShadow: '0 0 0 1px $$borderColor',
 })
@@ -48,17 +48,17 @@ const AnimatedDropdownMenuContent = forwardRef<
 const DropdownMenuItem = styled(DropdownMenuPrimitive.DropdownMenuItem, {
   fontSize: 16,
   fontFamily: '$body',
-  color: '$gray12',
+  color: '$gray3',
   px: '$2',
   py: '$3',
   borderRadius: 8,
   outline: 'none',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: '$gray5',
+    backgroundColor: '$gray11',
   },
   '&:focus': {
-    backgroundColor: '$gray5',
+    backgroundColor: '$gray11',
   },
 })
 

@@ -1,5 +1,6 @@
 import { FC, ReactNode, useContext } from 'react'
-import { keyframes, styled } from '@stitches/react'
+import { styled, keyframes } from 'stitches.config'
+
 import * as ToastPrimitive from '@radix-ui/react-toast'
 import { ToastContext } from 'context/ToastContextProvider'
 

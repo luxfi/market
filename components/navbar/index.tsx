@@ -10,7 +10,6 @@ import ThemeSwitcher from './ThemeSwitcher'
 import ChainSwitcher from './ChainSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
-import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
@@ -24,7 +23,6 @@ const loadPortfolio = () => {
 }
 
 const Navbar = () => {
-  const { theme } = useTheme()
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
@@ -73,7 +71,7 @@ const Navbar = () => {
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch />
         <ChainSwitcher />
-        <ThemeSwitcher />
+        {/* <ThemeSwitcher /> */}
         <HamburgerMenu />
       </Flex>
     </Flex>
@@ -129,12 +127,12 @@ const Navbar = () => {
       </Box>
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
-        <ThemeSwitcher />
+        {/* <ThemeSwitcher /> */}
         <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />
         ) : (
-          <Box css={{ maxWidth: '185px' }}>
+          <Box css={{ maxWidth: '220px' }}>
             <ConnectWalletButton />
           </Box>
         )}

@@ -1,5 +1,3 @@
-import { styled } from '@stitches/react'
-import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -7,6 +5,9 @@ import {
   ReactNode,
   useState,
 } from 'react'
+
+import { styled } from 'stitches.config'
+import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import { AnimatePresence, motion } from 'framer-motion'
 
 const CollapsibleContent = styled(CollapsiblePrimitive.CollapsibleContent, {

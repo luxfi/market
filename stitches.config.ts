@@ -1,63 +1,89 @@
 import {
   crimson,
   slate,
-  crimsonDark,
-  violetDark,
-  slateDark,
-  greenDark,
+  // slateDark,
   green,
-  violetDarkA,
   whiteA,
-  redDark,
   red,
-  blackA,
   violet,
-  violetA,
 } from '@radix-ui/colors'
+
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
 import { reset } from 'utils/css/reset'
 
-export const { createTheme, keyframes, styled, globalCss, getCssText } =
+export const { styled, theme, keyframes, globalCss, getCssText } =
   createStitches({
     theme: {
       colors: {
         ...crimson,
         ...violet,
-        ...violetA,
         ...slate,
+        //...slateDark,
         ...red,
         ...whiteA,
-        ...blackA,
         ...green,
 
         //Primary
-        accent1: 'white',
-        primary1: 'black',
-        primary2: '$violet2',
-        primary3: '$violet3',
-        primary4: '$violet4',
-        primary5: '#ddd',
-        primary6: '$violet6',
-        primary7: '$violet7',
-        primary8: '$violet8',
-        primary9: '#ccc',
-        primary10: '#222',
-        primary12: '$violet12',
-
+        primary1: '$slate1',
+        primary2: '$slate2',
+        primary3: '$slate3',
+        primary4: '$slate4',
+        primary5: '$slate5',
+        primary6: '$slate6',
+        primary7: '$slate7',
+        primary8: '$slate8',
+        primary9: '$slate9',
+        primary10: '$slate10',
+        primary11: '$slate11',
+        primary12: '$slate12', 
+        
+        /* Please leave
+        primary1: '$slateDark1',
+        primary2: '$slateDark2',
+        primary3: '$slateDark3',
+        primary4: '$slateDark4',
+        primary5: '$slateDark5',
+        primary6: '$slateDark6',
+        primary7: '$slateDark7',
+        primary8: '$slateDark8',
+        primary9: '$slateDark9',
+        primary10: '$slateDark10',
+        primary11: '$slateDark11',
+        primary12: '$slateDark12', 
+        */
+       
+        accent1: 'black',
+    
         //Secondary
-        secondary1: '$violetA1',
-        secondary2: '$violetA2',
-        secondary3: '$violetA3',
-        secondary4: '$violetA4',
-        secondary5: '$violetA5',
-        secondary6: '$violetA6',
-        secondary7: '$violetA7',
-        secondary8: '$violetA8',
-        secondary9: '$violetA9',
-        secondary10: '$violetA10',
-        secondary11: '$violetA11',
-        secondary12: '$violetA12',
+        secondary1: '$violet1',
+        secondary2: '$violet2',
+        secondary3: '$violet3',
+        secondary4: '$violet4',
+        secondary5: '$violet5',
+        secondary6: '$violet6',
+        secondary7: '$violet7',
+        secondary8: '$violet8',
+        secondary9: '$violet9',
+        secondary10: '$violet10',
+        secondary11: '$violet11',
+        secondary12: '$violet12',
+
+        // Please leave
+        /*
+        gray1: '$slateDark1',
+        gray2: '$slateDark2',
+        gray3: '$slateDark3',
+        gray4: '$slateDark4',
+        gray5: '$slateDark5',
+        gray6: '$slateDark6',
+        gray7: '$slateDark7',
+        gray8: '$slateDark8',
+        gray9: '$slateDark9',
+        gray10: '$slateDark10',
+        gray11: '$slateDark11',
+        gray12: '$slateDark12', 
+        */
 
         //Gray
         gray1: '$slate1',
@@ -66,12 +92,13 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         gray4: '$slate4',
         gray5: '$slate5',
         gray6: '$slate6',
-        gray7: '$slate7',
+        gray7: '$slate6',
         gray8: '$slate8',
         gray9: '$slate9',
         gray10: '$slate10',
         gray11: '$slate11',
         gray12: '$slate12',
+
 
         //Red
         red1: '$crimson1',
@@ -87,11 +114,15 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         red11: '$crimson11',
         red12: '$crimson12',
 
-        neutralBg: 'white',
-        neutralBgSubtle: 'white',
-        panelShadow: 'rgba(0,0,0,0.1)',
-        panelBg: '$gray2',
-        panelBorder: 'transparent',
+    
+        accent: '#7000FF',
+
+        neutralBgSubtle: '#111',
+        neutralBg: 'black',
+    
+        panelBg: '#111',
+        panelBorder: 'black',
+        panelShadow: 'transparent',
       },
       space: {
         1: '4px',
@@ -216,6 +247,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
 
 export const globalReset = globalCss(reset)
 
+/* Please leave
 export const darkTheme = createTheme({
   colors: {
     ...crimsonDark,
@@ -284,3 +316,4 @@ export const darkTheme = createTheme({
     panelShadow: 'transparent',
   },
 })
+*/

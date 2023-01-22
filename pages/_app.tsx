@@ -1,9 +1,12 @@
+import { FC, useEffect, useState } from 'react'
+
 import 'fonts/inter.css'
+import '@rainbow-me/rainbowkit/styles.css'
+
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
-import { darkTheme, globalReset } from 'stitches.config'
-import '@rainbow-me/rainbowkit/styles.css'
+import { theme as stitchesTheme, globalReset } from 'stitches.config'
 import {
   RainbowKitProvider,
   getDefaultWallets,
@@ -11,9 +14,9 @@ import {
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
-import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import * as Tooltip from '@radix-ui/react-tooltip'
 
 import {
   ReservoirKitProvider,
@@ -21,8 +24,8 @@ import {
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
+
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
@@ -67,32 +70,28 @@ const reservoirKitThemeOverrides = {
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      value={{
-        dark: darkTheme.className,
-        light: 'light',
-      }}
-    >
-      <WagmiConfig client={wagmiClient}>
-        <ChainContextProvider>
-          <AnalyticsProvider>
-            <MyApp {...props} />
-          </AnalyticsProvider>
-        </ChainContextProvider>
-      </WagmiConfig>
-    </ThemeProvider>
+    <WagmiConfig client={wagmiClient}>
+      <ChainContextProvider>
+        <AnalyticsProvider>
+          <MyApp {...props} />
+        </AnalyticsProvider>
+      </ChainContextProvider>
+    </WagmiConfig>
   )
 }
 
-function MyApp({
+const MyApp: React.FC<
+  AppProps & 
+  { baseUrl: string 
+}> = ({
   Component,
   pageProps,
   baseUrl,
-}: AppProps & { baseUrl: string }) {
+}) => {
+  
   globalReset()
 
+      // Note, this just manages theme selection (Does not implement any theming itself.)
   const { theme } = useTheme()
   const marketplaceChain = useMarketplaceChain()
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
@@ -156,32 +155,32 @@ function MyApp({
         attribute="class"
         defaultTheme="dark"
         value={{
-          dark: darkTheme.className,
+          dark: stitchesTheme.className,
           light: 'light',
         }}
       >
-        <ReservoirKitProvider
-          options={{
-            apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
-            apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
-            // Replace source with your domain
-            // source: 'YOUR_DOMAIN',
-            normalizeRoyalties: NORMALIZE_ROYALTIES,
-          }}
-          theme={reservoirKitTheme}
-        >
-          <Tooltip.Provider>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <ToastContextProvider>
-                <FunctionalComponent {...pageProps} />
-              </ToastContextProvider>
-            </RainbowKitProvider>
-          </Tooltip.Provider>
-        </ReservoirKitProvider>
+      <ReservoirKitProvider
+        options={{
+          apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
+          apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
+          // Replace source with your domain
+          // source: 'YOUR_DOMAIN',
+          normalizeRoyalties: NORMALIZE_ROYALTIES,
+        }}
+        theme={reservoirKitTheme}
+      >
+        <Tooltip.Provider>
+          <RainbowKitProvider
+            chains={chains}
+            theme={rainbowKitTheme}
+            modalSize="compact"
+          >
+            <ToastContextProvider>
+              <FunctionalComponent {...pageProps} />
+            </ToastContextProvider>
+          </RainbowKitProvider>
+        </Tooltip.Provider>
+      </ReservoirKitProvider>
       </ThemeProvider>
     </HotkeysProvider>
   )

@@ -1,4 +1,4 @@
-import { keyframes } from '@stitches/react'
+import { keyframes } from 'stitches.config'
 import { Box, Flex } from 'components/primitives'
 
 const pulse = keyframes({
