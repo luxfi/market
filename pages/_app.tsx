@@ -1,4 +1,5 @@
 import 'fonts/inter.css'
+import "style/iframe.css"
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
