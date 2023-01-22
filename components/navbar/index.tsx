@@ -143,8 +143,8 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/portfolio'}>Portfolio</NavItem>
             </Link>
 
-            <Link href="https://docs.lux.network" prefetch>
-              <NavItem active={router.pathname == '/docs'}>?</NavItem>
+            <Link href="https://docs.lux.finance" prefetch>
+              <NavItem active={router.pathname == '/docs'}>Support</NavItem>
             </Link>
           </Flex>
 
