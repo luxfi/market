@@ -37,20 +37,21 @@ const Button = styled('button', {
     color: {
       primary: {
         backgroundColor: '$primary4',
-        border: '0px solid $accent1',
+        border: '1px solid $primary12',
         color: '$primary12',
         '&:hover': {
           color: '$primary12',
-          borderWidth: '2px',
+          borderColor: '$primary1',
           backgroundColor: '$primary1',
         },
       },
       secondary: {
         backgroundColor: '$secondary4',
         color: '$secondary12',
-        border: '2px solid transparent',
+        border: '1px solid $secondary12',
         '&:hover': {
           color: '$secondary12',
+          borderColor: '$secondary1',
           backgroundColor: '$secondary1',
         },
       },
@@ -160,9 +161,11 @@ const Button = styled('button', {
         backgroundColor: 'transparent',
         borderStyle: 'solid',
         borderWidth: '1px',
+        outline: '0.5px solid $primary12',
         '&:hover': {
           backgroundColor: '$primary12',
           color: '$primary1', 
+          outlineColor: '$primary1',
           borderColor: '$primary1',
         },
       }
@@ -176,9 +179,11 @@ const Button = styled('button', {
         backgroundColor: 'transparent',
         borderStyle: 'solid',
         borderWidth: '1px',
+        outline: '0.5px solid $secondary12',
         '&:hover': {
           backgroundColor: '$secondary12',
           color: '$secondary1', 
+          outlineColor: '$secondary1',
           borderColor: '$secondary1',
         },
       }
