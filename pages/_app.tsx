@@ -7,7 +7,7 @@ import "style/iframe.css"
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
-import { theme as stitchesTheme, globalReset } from 'stitches.config'
+import { darkTheme, globalReset } from 'stitches.config'
 import {
   RainbowKitProvider,
   getDefaultWallets,
@@ -82,14 +82,14 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
 }
 
 const MyApp: React.FC<
-  AppProps & 
-  { baseUrl: string 
+  AppProps &
+  { baseUrl: string
 }> = ({
   Component,
   pageProps,
   baseUrl,
 }) => {
-  
+
   globalReset()
 
       // Note, this just manages theme selection (Does not implement any theming itself.)
@@ -156,7 +156,7 @@ const MyApp: React.FC<
         attribute="class"
         defaultTheme="dark"
         value={{
-          dark: stitchesTheme.className,
+          dark: darkTheme.className,
           light: 'light',
         }}
       >
