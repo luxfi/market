@@ -108,7 +108,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search assets and addresses"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -119,24 +119,28 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/'}>Assets</NavItem>
             </Link>
 
-            <Link href="https://lux.credit" prefetch>
+            <Link href="/credit" prefetch>
               <NavItem active={router.pathname == '/credit'}>Credit</NavItem>
             </Link>
 
+            {/*
             <Link href="/earn" prefetch>
               <NavItem active={router.pathname == '/earn'}>Earn</NavItem>
             </Link>
+            */}
 
-            <Link href="https://lux.town">
+            <Link href="/mint">
               <NavItem active={router.pathname == '/mint'}>Mint</NavItem>
             </Link>
 
+            {/*
             <Link href="/swap" prefetch>
               <NavItem active={router.pathname == '/swap'}>Swap</NavItem>
             </Link>
+            */}
 
             <Link href="/portfolio" onClick={loadPortfolio} prefetch>
-              <NavItem active={router.pathname == '/portfolio'}>Trade</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Portfolio</NavItem>
             </Link>
 
             <Link href="https://docs.lux.network" prefetch>
