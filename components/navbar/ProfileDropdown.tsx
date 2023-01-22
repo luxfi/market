@@ -15,6 +15,7 @@ import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useENSResolver } from 'hooks'
 import CopyText from 'components/common/CopyText'
+import ThemeSwitcher from './ThemeSwitcher'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
@@ -67,16 +68,29 @@ export const ProfileDropdown: FC = () => {
       </DropdownMenuItem>
 
       <DropdownMenuItem css={{ cursor: 'text' }}>
-        <Flex justify="between">
-          Balance
-          <FormatCryptoCurrency
-            amount={balance?.value}
-            decimals={balance?.decimals}
-            textStyle="body1"
-            logoHeight={14}
-          />
+        <Link href={`https://etherscan.io/search?f=0&q=${address}`} style={{ flex: 1 }}>
+          <Flex justify="between">
+            Balance
+            <FormatCryptoCurrency
+              amount={balance?.value}
+              decimals={balance?.decimals}
+              textStyle="body1"
+              logoHeight={14}
+            />
+          </Flex>
+        </Link>
+      </DropdownMenuItem>
+
+      <DropdownMenuItem css={{ cursor: 'text' }}>
+        <Flex
+          justify="between"
+          align="center"
+        >
+          <Text style="body1">Switch Theme</Text>
+          <ThemeSwitcher />
         </Flex>
       </DropdownMenuItem>
+
       <DropdownMenuItem>
         <Flex
           justify="between"
