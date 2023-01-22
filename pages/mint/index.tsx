@@ -38,14 +38,16 @@ const MintPage: NextPage = () => {
         direction="column"
         css={{
           overflow: "hidden !important",
-          height: "100vh",
+          height: "111vh",
+          marginTop: "2.2%",
+          paddingBottom: "111px"
         }}
       >
       <IFrame url="https://lux.town"
         onLoad={()=> {setIFrameLoaded(true)}}
         overflow="hidden !important"
         width="100%"
-        height="100%"
+        height="110%"
         id="luxtown"
         className={IFrameLoaded ? 'iframe-loaded' : 'iframe-loading' }
       />

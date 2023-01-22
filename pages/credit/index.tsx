@@ -39,6 +39,8 @@ const CreditPage: NextPage = () => {
         css={{
           overflow: "hidden !important",
           height: "100vh",
+          marginTop: "-81px",
+          marginBottom: "-81px"
         }}
       >
       <IFrame url="https://lux.credit"
