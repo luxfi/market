@@ -26,12 +26,10 @@ class MyDocument extends Document {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="keywords" content="blockhain, crypto, nft, ethereum, protocol, real world assets, RWAs" />
-        <link
-          rel="shortcut icon"
-          type="image/png"
-          href="/logo.png"
-        />
-        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+        <link rel="manifest" href="/site.webmanifest"/>
         <title>LUX | DeFi credit card, blockchain, bridge, exchange and wallet.</title>
         <meta
           name="description"
