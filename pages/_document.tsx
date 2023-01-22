@@ -31,6 +31,7 @@ class MyDocument extends Document {
           type="image/png"
           href="/logo.png"
         />
+        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
         <title>LUX | DeFi credit card, blockchain, bridge, exchange and wallet.</title>
         <meta
           name="description"
