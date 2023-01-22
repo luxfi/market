@@ -9,7 +9,6 @@ import NavItem from './NavItem'
 import ChainSwitcher from './ChainSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
-import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
@@ -23,7 +22,6 @@ const loadPortfolio = () => {
 }
 
 const Navbar = () => {
-  const { theme } = useTheme()
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
@@ -154,7 +152,7 @@ const Navbar = () => {
         {isConnected ? (
           <ProfileDropdown />
         ) : (
-          <Box css={{ maxWidth: '185px' }}>
+          <Box css={{ maxWidth: '220px' }}>
             <ConnectWalletButton />
           </Box>
         )}

@@ -1,8 +1,8 @@
+import { styled } from 'stitches.config'
 import {
   Root as ToggleGroupRoot,
   Item as ToggleGroupItem,
 } from '@radix-ui/react-toggle-group'
-import { styled } from 'stitches.config'
 
 const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
   borderRadius: 8,
@@ -12,10 +12,16 @@ const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
 })
 
 const StyledToggleGroupItem = styled(ToggleGroupItem, {
-  background: '$gray3',
-  color: '$gray12',
+  backgroundColor: 'transparent',
+  color: '$gray8',
   p: '$3',
-  '&[data-state=on]': { backgroundColor: '$primary5' },
+  '&:hover': {
+    backgroundColor: '$gray11' 
+  },
+  '&[data-state=on]': { 
+    color: '$gray3',
+    backgroundColor: '$gray11' 
+  },
 })
 
 export {
