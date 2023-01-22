@@ -37,15 +37,18 @@ const Button = styled('button', {
     color: {
       primary: {
         backgroundColor: '$primary4',
+        border: '0px solid $accent1',
         color: '$primary12',
         '&:hover': {
           color: '$primary12',
+          borderWidth: '2px',
           backgroundColor: '$primary1',
         },
       },
       secondary: {
         backgroundColor: '$secondary4',
         color: '$secondary12',
+        border: '2px solid transparent',
         '&:hover': {
           color: '$secondary12',
           backgroundColor: '$secondary1',
@@ -76,7 +79,7 @@ const Button = styled('button', {
         borderRadius: 0,
       },
       rounded: {
-        borderRadius: 8,
+        borderRadius: 10,
       },
       pill: {
         borderRadius: 99999,

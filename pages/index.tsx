@@ -114,7 +114,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" color='light'>
-              Popular Collections
+              Popular NFTs
             </Text>
             <TrendingCollectionsTimeToggle
               compact={compactToggleNames && isMounted}
@@ -136,15 +136,15 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           )}
           {showViewAllButton && (
             <Button
+              color="secondary"
               disabled={isValidating}
               onClick={fetchNextPage}
               css={{
-                minWidth: 224,
+                minWidth: 180,
                 justifyContent: 'center',
                 alignSelf: 'center',
                 mb: '$4'
               }}
-              size="large"
             >
               View All
             </Button>

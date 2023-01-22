@@ -300,7 +300,7 @@ export const darkTheme = createTheme({
     gray5: '$slate5',
     gray6: '$slate6',
     gray7: '#333',
-    gray8: '$slate8',
+    gray8: '#222',
     gray9: '$slate9',
     gray10: '$slate10',
     gray11: '$slate11',
