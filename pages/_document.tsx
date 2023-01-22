@@ -25,18 +25,18 @@ class MyDocument extends Document {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="keywords" content="nft, ethereum, protocol" />
+        <meta name="keywords" content="blockhain, crypto, nft, ethereum, protocol, real world assets, RWAs" />
         <link
           rel="shortcut icon"
-          type="image/svg"
-          href="/shortcut.svg"
+          type="image/png"
+          href="/logo.png"
         />
         <title>LUX | DeFi credit card, blockchain, bridge, exchange and wallet.</title>
         <meta
           name="description"
           content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
-        <meta name="keywords" content="Blockchain, Ethereum, Crypto DeFI, NFT, API, Protocol" />
+        <meta name="keywords" content="Blockchain, Ethereum, Crypto DeFI, NFT, API, Protocol, Real World Assets, RWAs" />
 
         {/* Twitter */}
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
