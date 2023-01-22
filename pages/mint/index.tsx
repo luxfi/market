@@ -37,13 +37,17 @@ const MintPage: NextPage = () => {
       <Flex
         direction="column"
         css={{
-          overflow: "hidden !important",
+          position: "absolute",
+          top: 0,
           height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+          marginTop: "81px"
         }}
       >
       <IFrame url="https://lux.town"
         onLoad={()=> {setIFrameLoaded(true)}}
-        overflow="hidden !important"
+        overflow="hidden"
         width="100%"
         height="100%"
         id="luxtown"

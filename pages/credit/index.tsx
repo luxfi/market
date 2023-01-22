@@ -37,16 +37,18 @@ const CreditPage: NextPage = () => {
       <Flex
         direction="column"
         css={{
-          overflow: "hidden !important",
+          position: "absolute",
+          top: 0,
           height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
         }}
       >
       <IFrame url="https://lux.credit"
         onLoad={()=> {setIFrameLoaded(true)}}
-        overflow="hidden !important"
+        overflow="hidden"
         width="100%"
         height="100%"
-        id="luxtown"
         className={IFrameLoaded ? 'iframe-loaded' : 'iframe-loading' }
       />
       </Flex>
