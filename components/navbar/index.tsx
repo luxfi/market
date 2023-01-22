@@ -6,7 +6,6 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
-import ThemeSwitcher from './ThemeSwitcher'
 import ChainSwitcher from './ChainSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
@@ -71,7 +70,6 @@ const Navbar = () => {
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch />
         <ChainSwitcher />
-        {/* <ThemeSwitcher /> */}
         <HamburgerMenu />
       </Flex>
     </Flex>
@@ -106,7 +104,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search assets and addresses"
+              placeholder="Search..."
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -141,7 +139,7 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/portfolio'}>Portfolio</NavItem>
             </Link>
 
-            <Link href="https://docs.lux.network" prefetch>
+            <Link href="https://docs.lux.finance" prefetch>
               <NavItem active={router.pathname == '/docs'}>?</NavItem>
             </Link>
           </Flex>
@@ -150,7 +148,6 @@ const Navbar = () => {
       </Box>
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
-        {/* <ThemeSwitcher /> */}
         <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />

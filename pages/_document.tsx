@@ -25,29 +25,31 @@ class MyDocument extends Document {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="keywords" content="nft, ethereum, protocol" />
+        <meta name="keywords" content="blockhain, crypto, nft, ethereum, protocol, real world assets, RWAs" />
         <link
           rel="shortcut icon"
-          type="image/svg"
-          href="https://market.reservoir.tools/reservoir.svg"
+          type="image/png"
+          href="/logo.png"
         />
-        <title>LUX Market | Open Source NFT Marketplace</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+        <title>LUX | DeFi credit card, blockchain, bridge, exchange and wallet.</title>
         <meta
           name="description"
-          content="LUX Market is an open source NFT marketplace built on LUX Network."
+          content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
-        <meta name="keywords" content="NFT, API, Protocol" />
+        <meta name="keywords" content="Blockchain, Ethereum, Crypto DeFI, NFT, API, Protocol, Real World Assets, RWAs" />
+
         {/* Twitter */}
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
-        {/* <meta name="twitter:image" content="Reservoir Market | Open Source NFT Marketplace" /> */}
+        <meta name="twitter:image" content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet." />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="LUX Market | Open Source NFT Marketplace"
+          content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
         <meta
           name="twitter:description"
-          content="LUX Market is an open source NFT marketplace built on LUX Network."
+          content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
         <meta name="twitter:site" content="@luxdefi" />
 
@@ -55,25 +57,25 @@ class MyDocument extends Document {
         {/* https://www.opengraph.xyz/ */}
         <meta
           name="og:title"
-          content="LUX Market | Open Source NFT Marketplace"
+          content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
         <meta property="og:locale" content="en" />
         <meta
           property="og:description"
-          content="LUX Market is an open source NFT marketplace built on LUX Network."
+          content="LUX is a DeFi credit card, blockchain, bridge, exchange and wallet."
         />
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
         {/* <meta property="og:image" content={OG_IMAGE} /> */}
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="640" />
-        <meta property="og:image:alt" content="LUX Market Banner" />
+        <meta property="og:image:alt" content="LUX Banner" />
 
         {/* LUX Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
-        <meta property="reservoir:title" content="LUX Market" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        <meta property="reservoir:title" content="LUX" />
+        <meta property="reservoir:icon" content="/source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
           content="/collection/ethereum/${contract}/${tokenId}"
