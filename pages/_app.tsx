@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react'
 
 import 'fonts/inter.css'
 import '@rainbow-me/rainbowkit/styles.css'
+import "style/iframe.css"
 
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'

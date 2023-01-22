@@ -4296,6 +4296,13 @@ react-hotkeys-hook@^4.0.4:
   resolved "https://registry.yarnpkg.com/react-hotkeys-hook/-/react-hotkeys-hook-4.0.4.tgz#41675ce5f82cf1a978e89e16461242f2cd132e81"
   integrity sha512-3w8Sk3ElOOv8+e8YreXlF4fl57iHcJ7GacocSKvvVRhGZDBzTfOe+DKz31ogtYJx7n9PRW5wMlaw2GDKhvUJeA==
 
+react-iframe@^1.8.5:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/react-iframe/-/react-iframe-1.8.5.tgz#33dc091147c3f2371d0826797f1b5767ff28a56f"
+  integrity sha512-F4cQJGs3ydaG6fJWfuz9yLwOU0Trzl6kttXuUG+vYwosH8enOOFxZWEDQCSbNVO8ayjfYZeqLxEvdvcsSy4GvA==
+  dependencies:
+    object-assign "^4.1.1"
+
 react-infinite-scroll-hook@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-hook/-/react-infinite-scroll-hook-4.0.4.tgz#616e66ba1de6421f74cd37d652e5b8c26c886373"

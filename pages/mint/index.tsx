@@ -20,10 +20,13 @@ import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
+import IFrame from 'react-iframe'
+
 const MintPage: NextPage = () => {
   const { address, isConnected } = useAccount()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
+  const [IFrameLoaded, setIFrameLoaded] = useState(false);
 
   if (!isMounted) {
     return null
@@ -34,18 +37,18 @@ const MintPage: NextPage = () => {
       <Flex
         direction="column"
         css={{
-          px: '$4',
-          py: '$5',
-          '@sm': {
-            px: '$5',
-          },
+          overflow: "hidden !important",
+          height: "100vh",
         }}
       >
-      <iframe src="https://lux.town" style={{
-        display: "block",
-        height: "90vh",
-        backgroundColor: "black",
-      }}/>
+      <IFrame url="https://lux.town"
+        onLoad={()=> {setIFrameLoaded(true)}}
+        overflow="hidden !important"
+        width="100%"
+        height="100%"
+        id="luxtown"
+        className={IFrameLoaded ? 'iframe-loaded' : 'iframe-loading' }
+      />
       </Flex>
     </Layout>
   )
