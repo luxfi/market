@@ -51,7 +51,7 @@ const { chains, provider } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir Hub',
+  appName: 'LUX',
   chains,
 })
 
