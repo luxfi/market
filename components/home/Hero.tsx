@@ -53,7 +53,7 @@ const Hero: FC<{
       </Box>
       <Flex direction='row' css={{ mt: '$2', gap: '$2'}} className="grid h-[100px] w-[380px] grid-cols-2 gap-4">
         <a href={learnMoreHref}>
-          <Button variant='outlined'>
+          <Button color='secondary'>
             Learn More
           </Button>
         </a>
