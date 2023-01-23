@@ -92,11 +92,11 @@ const TrendingCollectionsList: FC<Props> = ({
               css={{
                 inset: 0,
                 position: 'absolute',
-                background: '$slate1',
+                background: '$grey10',
                 opacity: 0.9,
               }}
-            ></Box>
-            <LoadingSpinner />
+            ><LoadingSpinner /></Box>
+            
           </Flex>
         )}
       </Box>

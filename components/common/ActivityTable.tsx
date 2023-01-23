@@ -274,7 +274,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                     css={{
                       color: '$primary11',
                       '&:hover': {
-                        color: '$primary10',
+                        color: '$primary12',
                       },
                     }}
                   >
@@ -298,7 +298,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                     css={{
                       color: '$primary11',
                       '&:hover': {
-                        color: '$primary10',
+                        color: '$primary12',
                       },
                     }}
                   >
@@ -395,7 +395,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 css={{
                   color: '$primary11',
                   '&:hover': {
-                    color: '$primary10',
+                    color: '$primary12',
                   },
                 }}
               >

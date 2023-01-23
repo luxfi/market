@@ -1,18 +1,18 @@
 import {
   crimson,
-  slate,
   crimsonDark,
-  violetDark,
+  slate,
   slateDark,
-  greenDark,
-  green,
-  violetDarkA,
-  whiteA,
-  redDark,
-  red,
-  blackA,
   violet,
   violetA,
+  violetDark,
+  violetDarkA,
+  green,
+  greenDark,
+  whiteA,
+  red,
+  redDark,
+  blackA,
 } from '@radix-ui/colors'
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
@@ -227,17 +227,14 @@ export const darkTheme = createTheme({
     ...redDark,
     ...blackA,
 
-    //Aliases
-    slate1: '#000',
-    slate2: '#111',
-
-    //Primary
-    accent1: 'black',
+    //Old Primary
+    /* Please leave
+    accent1: 'black', // unused in latest button code
     primary1: 'white',
     primary2: '$violet2',
     primary3: '$violet3',
     primary4: '$violet4',
-    primary5: '#222',
+    primary5: '#222', // not in use
     primary6: '$violet6',
     primary7: '$violet7',
     primary8: '$violet8',
@@ -245,34 +242,53 @@ export const darkTheme = createTheme({
     primary10: '#ddd',
     primary11: '#ccc',
     primary12: '$violet12',
+    */
 
-    //Secondary
-    secondary1: '$violetA1',
-    secondary2: '$violetA2',
-    secondary3: '$violetA3',
-    secondary4: '$violetA4',
-    secondary5: '$violetA5',
-    secondary6: '$violetA6',
-    secondary7: '$violetA7',
-    secondary8: '$violetA8',
-    secondary9: '$violetA9',
-    secondary10: '$violetA10',
-    secondary11: '$violetA11',
-    secondary12: '$violetA12',
 
-    //Gray
-    gray1: '$slate1',
-    gray2: '$slate2',
-    gray3: '#111',
-    gray4: '#111',
-    gray5: '$slate5',
-    gray6: '$slate6',
-    gray7: '#333',
-    gray8: '#222',
-    gray9: '$slate9',
-    gray10: '$slate10',
-    gray11: '$slate11',
-    gray12: '#eee',
+      // Primary == slate
+    primary1: '#fbfcfd',
+    primary2: '#f8f9fa',
+    primary3: '#f1f3f5',
+    primary4: '#eceef0',
+    primary5: '#e6e8eb',
+    primary6: '#dfe3e6',
+    primary7: '#d7dbdf',
+    primary8: '#c1c8cd',
+    primary9: '#889096',
+    primary10: '#7e868c',
+    primary11: '#687076',
+    primary12: '#11181c',
+
+    // Secondary == slateDark
+    secondary1: '#151718',
+    secondary2: '#1a1d1e',
+    secondary3: '#202425',
+    secondary4: '#26292b',
+    secondary5: '#2b2f31',
+    secondary6: '#313538',
+    secondary7: '#3a3f42',
+    secondary8: '#4c5155',
+    secondary9: '#697177',
+    secondary10: '#787f85',
+    secondary11: '#9ba1a6',
+    secondary12: '#ecedee',
+
+      // According to current usage,
+      // and https://www.radix-ui.com/docs/colors/palette-composition/understanding-the-scale
+    gray1: '#000', 
+    gray2: '#0a0a0a',
+    gray3: '#1a1a1a',
+    gray4: '#222',
+      // these are just grayDark from here
+    gray5: '#2e2e2e',
+    gray6: '#343434',
+    gray7: '#3e3e3e',
+    gray8: '#505050',
+    gray9: '#707070',
+    gray10: '#7e7e7e',
+    gray11: '#a0a0a0',
+    gray12: '#ededed',
+  
 
     accent: '#7000FF',
 

@@ -24,7 +24,7 @@ export const TrendingCollectionItem: FC<Props> = ({
       style={{ display: 'inline-block', minWidth: 0 }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>
-        <Text css={{ mr: '$4' }} style="subtitle3">
+        <Text css={{ mr: '$4' }} style="subtitle3" >
           {rank}
         </Text>
         <img
@@ -47,7 +47,7 @@ export const TrendingCollectionItem: FC<Props> = ({
             />
           </Flex>
           <Flex>
-            <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
+            <Text css={{ mr: '$1', color: '$gray11' }} style="body2" >
               Floor
             </Text>
             <FormatCryptoCurrency
