@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import Link from 'next/link'
 
-import { 
-  Text, 
-  Box, 
-  Flex, 
-  Grid, 
-  Button 
+import {
+  Text,
+  Box,
+  Flex,
+  Grid,
+  Button
 } from 'components/primitives'
 
 
@@ -23,7 +23,7 @@ const Hero: FC<{
 }) => {
 
   return (
-    <Flex 
+    <Flex
       align='center'
       justify='center'
       direction='column'
@@ -31,19 +31,19 @@ const Hero: FC<{
         backgroundColor: 'transparent'
       }}
     >
-      <Text style='h4' css={{textAlign: 'center', color: '$gray12'}} >ALL-NEW ASSET-BACKEND NFTS</Text>
-      <Text 
+      <Text style='h4' css={{textAlign: 'center', color: '$gray12'}} >ALL NEW ASSET BACKED</Text>
+      <Text
         style='h2'
         css={{
           textAlign: 'center',
           color: '$gray12'
         }}
-      >LUX URANIUM NFT</Text>
+      >LUX URANIUM</Text>
       <Box css={{  mt: '$2' }} >
-        <video 
-          loop 
-          muted 
-          autoPlay 
+        <video
+          loop
+          muted
+          autoPlay
           width={videoWidth}
           height={videoHeight}
           style={{ padding: 32, marginTop: -32 }} // :aa why?

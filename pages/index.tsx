@@ -114,7 +114,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" color='subtle'>
-              Popular NFTs
+              Popular collections
             </Text>
             <TrendingCollectionsTimeToggle
               compact={compactToggleNames && isMounted}
