@@ -39,7 +39,7 @@ const Hero: FC<{
           color: '$gray12'
         }}
       >LUX URANIUM</Text>
-      <Box css={{  mt: '$2' }} >
+      <Box css={{  borderRadius: 16, backgroundColor: 'black', p: 36, mt: '$2' }} >
         <video
           loop
           muted
