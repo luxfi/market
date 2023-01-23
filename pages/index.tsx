@@ -21,7 +21,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const TOKEN_HREF = '/collections/0x31e0f919c67cedd2bc3e294340dc900735810311/'
 const LEARN_MORE_HREF='https://lux.market/uranium'
-const VIDEO_HEIGHT = 400 
+const VIDEO_HEIGHT = 400
 const VIDEO_ASPECT_RATIO=0.9362
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
@@ -95,9 +95,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
         }}
       >
         <Flex css={{ gap: 20 }} direction="column" >
-          <Hero 
-            tokenHref={TOKEN_HREF} 
-            learnMoreHref={LEARN_MORE_HREF} 
+          <Hero
+            tokenHref={TOKEN_HREF}
+            learnMoreHref={LEARN_MORE_HREF}
             videoWidth={VIDEO_HEIGHT * VIDEO_ASPECT_RATIO}
             videoHeight={VIDEO_HEIGHT}
           />
@@ -113,7 +113,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               },
             }}
           >
-            <Text style="h4" color='light'>
+            <Text style="h4" color='subtle'>
               Popular NFTs
             </Text>
             <TrendingCollectionsTimeToggle
