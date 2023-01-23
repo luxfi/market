@@ -113,7 +113,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               },
             }}
           >
-            <Text style="h4" color='subtle'>
+            <Text style="h4">
               Popular collections
             </Text>
             <TrendingCollectionsTimeToggle
