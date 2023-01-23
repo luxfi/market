@@ -19,7 +19,7 @@ import supportedChains from 'utils/chains'
 import Hero from 'components/home/Hero'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const TOKEN_HREF = '/collections/0x31e0f919c67cedd2bc3e294340dc900735810311/'
+const TOKEN_HREF = '/collection/ethereum/0x31e0f919c67cedd2bc3e294340dc900735810311/'
 const LEARN_MORE_HREF='https://lux.market/uranium'
 const VIDEO_HEIGHT = 400
 const VIDEO_ASPECT_RATIO=0.9362
