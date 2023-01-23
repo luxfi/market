@@ -12,6 +12,7 @@ import {
   whiteA,
   red,
   redDark,
+  gray,
   blackA,
 } from '@radix-ui/colors'
 import { createStitches } from '@stitches/react'
@@ -30,8 +31,9 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         ...whiteA,
         ...blackA,
         ...green,
+        ...gray,
 
-        //Primary
+        /* Please leave
         accent1: 'white',
         primary1: 'black',
         primary2: '$violet2',
@@ -44,34 +46,38 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary9: '#ccc',
         primary10: '#222',
         primary12: '#eee',
+        */
 
-        //Secondary
-        secondary1: 'white',
-        secondary2: '$violetA2',
-        secondary3: '$violetA3',
-        secondary4: '$violetA4',
-        secondary5: '$violetA5',
-        secondary6: '$violetA6',
-        secondary7: '$violetA7',
-        secondary8: '$violetA8',
-        secondary9: '$violetA9',
-        secondary10: '$violetA10',
-        secondary11: '$violetA11',
-        secondary12: '$violetA12',
+          // Primary == slateDark
+        primary1: '#151718',
+        primary2: '#1a1d1e',
+        primary3: '#202425',
+        primary4: '#26292b',
+        primary5: '#2b2f31',
+        primary6: '#313538',
+        primary7: '#3a3f42',
+        primary8: '#4c5155',
+        primary9: '#697177',
+        primary10: '#787f85',
+        primary11: '#9ba1a6',
+        primary12: '#ecedee',
+
+          // Secondary == slate
+        secondary1: '#fbfcfd',
+        secondary2: '#f8f9fa',
+        secondary3: '#f1f3f5',
+        secondary4: '#eceef0',
+        secondary5: '#e6e8eb',
+        secondary6: '#dfe3e6',
+        secondary7: '#d7dbdf',
+        secondary8: '#c1c8cd',
+        secondary9: '#889096',
+        secondary10: '#7e868c',
+        secondary11: '#687076',
+        secondary12: '#11181c',
 
         //Gray
-        gray1: '$slate1',
-        gray2: '$slate2',
-        gray3: '$slate3',
-        gray4: '$slate4',
-        gray5: '$slate5',
-        gray6: '$slate6',
-        gray7: '$slate7',
-        gray8: '$slate8',
-        gray9: '$slate9',
-        gray10: '$slate10',
-        gray11: '$slate11',
-        gray12: '$slate12',
+        // Use radix gray
 
         //Red
         red1: '$crimson1',
@@ -273,8 +279,10 @@ export const darkTheme = createTheme({
     secondary11: '#9ba1a6',
     secondary12: '#ecedee',
 
-      // According to current usage,
-      // and https://www.radix-ui.com/docs/colors/palette-composition/understanding-the-scale
+      // Custom greyDark:
+      // First 4 according to current usage,
+      // rest from radix.
+      // Following https://www.radix-ui.com/docs/colors/palette-composition/understanding-the-scale
     gray1: '#000', 
     gray2: '#0a0a0a',
     gray3: '#1a1a1a',
