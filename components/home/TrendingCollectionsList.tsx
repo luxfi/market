@@ -50,10 +50,10 @@ const TrendingCollectionsList: FC<Props> = ({
           .fill(null)
           .map(() => (
             <Flex justify="between">
-              <Text style="subtitle3" color="lighter">
+              <Text style="subtitle3" color="subtle">
                 Collection
               </Text>
-              <Text style="subtitle3" color="lighter">
+              <Text style="subtitle3" color="subtle">
                 Volume
               </Text>
             </Flex>

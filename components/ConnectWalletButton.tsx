@@ -31,12 +31,7 @@ export const ConnectWalletButton: FC<Props> = () => {
               if (!mounted || !account || !chain) {
                 return (
                   <Button
-                    css={{
-                      justifyContent: 'center'
-                    }}
-                    corners="rounded"
                     color='primary'
-                    variant='outlined'
                     onClick={openConnectModal}
                     type="button"
                   >

@@ -48,18 +48,6 @@ export default styled('span', {
       subtle: {
         color: '$gray11',
       },
-      light: {
-        color: '$gray3'
-      },
-      lighter: {
-        color: '$gray7'
-      },
-      dark: {
-        color: '$gray11'
-      },
-      darker: {
-        color: '$gray9'
-      }
     },
     italic: {
       true: {

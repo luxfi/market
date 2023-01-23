@@ -16,10 +16,10 @@ const StyledInput = styled('input', {
   borderRadius: 8,
   fontFamily: '$body',
   fontSize: 16,
-  color: '$gray2',
-  backgroundColor: '$gray12',
+  color: '$gray12',
+  backgroundColor: '$gray3',
   $$focusColor: '$colors$primary8',
-  '&::placeholder': { color: '$gray10' },
+  '&::placeholder': { color: '$gray11' },
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
 })
 

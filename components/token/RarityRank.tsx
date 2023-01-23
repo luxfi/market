@@ -76,7 +76,7 @@ export default ({ token, collection, collectionAttributes }: Props) => {
       <Flex
         align="center"
         css={{
-          background: '$gray2',
+          backgroundColor: '$gray2',
           mt: 24,
           mr: 'auto',
           px: '$2',

@@ -12,8 +12,6 @@ type Props = {
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
-const TEXT_COLOR = 'lighter'
-
 export const TrendingCollectionItem: FC<Props> = ({
   rank,
   collection,
@@ -26,7 +24,7 @@ export const TrendingCollectionItem: FC<Props> = ({
       style={{ display: 'inline-block', minWidth: 0 }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>
-        <Text css={{ mr: '$4' }} style="subtitle3" color={TEXT_COLOR}>
+        <Text css={{ mr: '$4' }} style="subtitle3" >
           {rank}
         </Text>
         <img
@@ -41,7 +39,6 @@ export const TrendingCollectionItem: FC<Props> = ({
               }}
               style="subtitle1"
               ellipsify
-              color={TEXT_COLOR}
             >
               {collection?.name}
             </Text>
@@ -50,7 +47,7 @@ export const TrendingCollectionItem: FC<Props> = ({
             />
           </Flex>
           <Flex>
-            <Text css={{ mr: '$1' }} style="body2" color={TEXT_COLOR}>
+            <Text css={{ mr: '$1', color: '$gray11' }} style="body2" >
               Floor
             </Text>
             <FormatCryptoCurrency
@@ -60,7 +57,6 @@ export const TrendingCollectionItem: FC<Props> = ({
               logoHeight={12}
               maximumFractionDigits={2}
               textStyle="subtitle2"
-              css={{color: '$grey5'}}
             />
           </Flex>
         </Box>
@@ -71,8 +67,7 @@ export const TrendingCollectionItem: FC<Props> = ({
             maximumFractionDigits={1}
             logoHeight={12}
             textStyle="subtitle1"
-            css={{color: '$grey5'}}
-            />
+          />
           {volumeKey !== 'allTime' && (
             <PercentChange
               value={collection?.volumeChange?.[volumeKey]}

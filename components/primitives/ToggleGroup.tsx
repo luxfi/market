@@ -12,15 +12,14 @@ const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
 })
 
 const StyledToggleGroupItem = styled(ToggleGroupItem, {
-  backgroundColor: 'transparent',
-  color: '$gray8',
+  backgroundColor: '$gray3',
+  color: '$gray12',
   p: '$3',
   '&:hover': {
-    backgroundColor: '$gray11' 
+    backgroundColor: '$gray4' 
   },
   '&[data-state=on]': { 
-    color: '$gray3',
-    backgroundColor: '$gray11' 
+    backgroundColor: '$gray5' 
   },
 })
 

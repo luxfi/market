@@ -31,12 +31,12 @@ const Hero: FC<{
         backgroundColor: 'transparent'
       }}
     >
-      <Text style='h4' css={{textAlign: 'center', color: '$gray2'}} >ALL-NEW ASSET-BACKEND NFTS</Text>
+      <Text style='h4' css={{textAlign: 'center', color: '$gray12'}} >ALL-NEW ASSET-BACKEND NFTS</Text>
       <Text 
         style='h2'
         css={{
           textAlign: 'center',
-          color: '$gray2'
+          color: '$gray12'
         }}
       >LUX URANIUM NFT</Text>
       <Box css={{  mt: '$2' }} >
@@ -53,12 +53,12 @@ const Hero: FC<{
       </Box>
       <Flex direction='row' css={{ mt: '$2', gap: '$2'}} className="grid h-[100px] w-[380px] grid-cols-2 gap-4">
         <a href={learnMoreHref}>
-          <Button variant='outlined' color='primary' className="mt-2 w-full dark:btn-outline-dk light:btn-outline">
+          <Button variant='outlined'>
             Learn More
           </Button>
         </a>
         <Link href={tokenHref}>
-          <Button className="mt-2 w-full dark:btn-contained-white light:btn-outline">
+          <Button >
             Buy Now
           </Button>
         </Link>
