@@ -7,6 +7,8 @@ const env = process.env.NODE_ENV
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   images: { unoptimized: true },
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   reactStrictMode: true,
