@@ -34,7 +34,8 @@ const nextConfig = {
     '@hanzo/auth',
     '@hanzo/commerce',
     '@luxfi/ui',
-    '@luxfi/data'
+    '@luxfi/data',
+    '@luxfi/menu-icons'
   ],
   productionBrowserSourceMaps: true,
   webpack: (config, { dev }) => {
