@@ -1,8 +1,5 @@
 const withMDX = require('@next/mdx')()
 const svgrPluginConfig = require('./next-conf/svgr.next.config')
-const watchPluginConfig = require('./next-conf/watch.next.config')
-
-const env = process.env.NODE_ENV
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -40,22 +37,7 @@ const nextConfig = {
     '@luxfi/menu-icons'
   ],
   productionBrowserSourceMaps: true,
-  webpack: (config, { dev }) => {
-    let conf = svgrPluginConfig(config)
-    if (dev) {
-      //conf =  watchPluginConfig(conf)
-        //https://github.com/vercel/next.js/discussions/33929
-      config.snapshot = {
-        ...(config.snapshot ?? {}),
-        // Add all node_modules but @hanzo module to managedPaths
-        // Allows for hot refresh of changes to @hanzo module
-        managedPaths: [/^(.+?[\\/]node_modules[\\/])(?!@hanzo)/],
-      };
-      config.cache = false
-    }
-    return conf
-
-  }
+  webpack: svgrPluginConfig
 }
 
 module.exports = withMDX(nextConfig)
