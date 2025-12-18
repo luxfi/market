@@ -2,20 +2,24 @@
 import React from 'react'
 
 import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent
+  Tabs, 
+  TabsList, 
+  TabsTrigger, 
+  TabsContent 
 } from '@hanzo/ui/primitives'
 
 import { Header, Main } from '@luxfi/ui'
 
 import siteDef from '@/site-def'
 
-import AddPanel from './_page/add-panel'
-import BuyPanel from './_page/buy-panel'
+import AddPanel from './_page/add-panel' 
+import BuyPanel from './_page/buy-panel' 
 
-const Page = () => {
+type Props = {
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+const Page = ({ searchParams }: Props ) => {
         
   return (<>
     <Header siteDef={siteDef}/>

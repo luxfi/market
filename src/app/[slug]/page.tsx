@@ -10,9 +10,11 @@ import siteDef from '../../site-def'
 
 type Props = {
   params: { slug: 'silver' | 'gold' | 'coin' | 'credit' | 'validator' | 'key' | 'uranium' }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
 export async function generateStaticParams() {
+
   const products = [
     'silver',
     'gold',
@@ -34,17 +36,21 @@ export async function generateMetadata({ params}: Props) {
   return { title: capitalized }
 }
 
-const ProductPage = ({ params }: Props) => {
+const ProductPage = ({ params, searchParams }: Props) => {
+
   const product = products[params.slug] as ProductDetailBlock
 
   if (!product) {
     notFound()
   }
 
+  // see src/middleware.ts
+  const agent = searchParams?.agent
+
   return (<>
     <Header siteDef={siteDef}/>
     <Main className='md:flex-row md:gap-4'>
-      <ProductDetailBlockComponent block={product} />
+      <ProductDetailBlockComponent block={product} agent={agent as string}/>
     </Main>
     <div className='border-t'></div>
     <Footer siteDef={siteDef} className='w-full pt-16 lg:mx-auto ' />
