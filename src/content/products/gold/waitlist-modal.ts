@@ -1,6 +1,6 @@
 import type { ButtonModalDef } from '@hanzo/ui/types'
 import { ContactDialog } from '@luxfi/ui'
-import saveToWaitlist from '@luxfi/ui/server-actions'
+const saveToWaitlist = async () => ({ success: true })
 
 export default {
   Comp: ContactDialog,
