@@ -1,0 +1,160 @@
+Lux Research License with Patent Reservation
+Version 1.0, December 2025
+
+Copyright (c) 2020-2025 Lux Industries Inc.
+All rights reserved.
+
+PATENT PENDING TECHNOLOGY
+Contact: oss@lux.network
+
+================================================================================
+                          IMPORTANT NOTICE
+================================================================================
+
+This software contains patent-pending technology. Key innovations include but
+are not limited to:
+
+AI MARKETPLACE INNOVATIONS:
+- Decentralized AI Compute Marketplace with Proof-of-Inference
+- Post-Quantum Secure Model Licensing and Access Control
+- AI Model Verification with Cryptographic Attestation
+- Cross-Chain AI Service Discovery and Routing
+- GPU Cluster Orchestration with NVTrust Integration
+- Federated Learning Marketplace with Privacy Guarantees
+- Dynamic Pricing with AI-Optimized Resource Allocation
+
+Commercial use of any patented technology requires a separate license.
+Contact oss@lux.network for commercial licensing inquiries.
+
+================================================================================
+                          LICENSE TERMS
+================================================================================
+
+1. DEFINITIONS
+
+   "Software" means the source code, object code, documentation, and any
+   related materials included in this repository.
+
+   "Research Use" means use of the Software solely for non-commercial
+   academic research, education, personal study, or evaluation purposes.
+
+   "Commercial Use" means any use of the Software or any patent claims
+   covered by the Software in connection with a product or service offered
+   for sale or fee, or any internal use by a for-profit entity, or any use
+   to generate revenue directly or indirectly.
+
+   "Patent Claims" means any patent claims owned or controlled by Lux
+   Industries Inc. that cover any aspect of the Software's implementation
+   or any method, system, or process described therein.
+
+   "Lux Network" means the decentralized blockchain network operated using
+   software distributed by Lux Industries Inc.
+
+2. GRANT OF RESEARCH LICENSE
+
+   Subject to the terms and conditions of this License, Lux Industries Inc.
+   hereby grants you a limited, non-exclusive, non-transferable, revocable,
+   royalty-free license to:
+
+   (a) Use, copy, and modify the Software solely for Research Use;
+
+   (b) Create derivative works of the Software solely for Research Use;
+
+   (c) Publish academic papers and research findings based on the Software,
+       provided that proper attribution is given; and
+
+   (d) Contribute modifications back to the original repository.
+
+3. RESTRICTIONS
+
+   You may NOT:
+
+   (a) Use the Software or any Patent Claims for any Commercial Use without
+       first obtaining a commercial license from Lux Industries Inc.;
+
+   (b) Use the Software to create or operate any blockchain network, consensus
+       system, or distributed ledger that competes with or is similar to the
+       Lux Network;
+
+   (c) Sublicense, sell, lease, or otherwise transfer rights in the
+       Software to any third party;
+
+   (d) Remove or alter any copyright, patent, trademark, or attribution
+       notices contained in the Software;
+
+   (e) Use the Software in any manner that infringes the Patent Claims
+       without authorization; or
+
+   (f) File any patent applications covering technology substantially
+       derived from the Software.
+
+4. PATENT RIGHTS RESERVATION
+
+   ALL PATENT RIGHTS ARE EXPRESSLY RESERVED by Lux Industries Inc.
+
+   This License does NOT grant any license or rights under any Patent Claims.
+   The grant of a copyright license herein does NOT include any express or
+   implied patent license.
+
+   Any use of the Software that would infringe Patent Claims requires a
+   separate patent license, which must be obtained in writing from:
+
+       Lux Industries Inc.
+       Email: oss@lux.network
+       Subject: Patent License Request
+
+5. LUX NETWORK PRIMARY NETWORK EXCEPTION
+
+   Notwithstanding the above restrictions, this License grants an automatic
+   license to use the Software and Patent Claims solely for the purpose of
+   operating a node on the Lux Network primary network (mainnet and testnet),
+   subject to the network's terms of service and validator requirements.
+
+6. CONTRIBUTIONS
+
+   By submitting contributions to this repository, you agree to license
+   your contributions under the same terms as this License and assign all
+   patent rights in your contributions to Lux Industries Inc.
+
+7. DISCLAIMER OF WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+8. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL LUX INDUSTRIES INC. BE LIABLE FOR ANY SPECIAL, DIRECT,
+   INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY KIND ARISING OUT
+   OF THE USE OF OR INABILITY TO USE THE SOFTWARE.
+
+9. TERMINATION
+
+   This License and all rights granted hereunder will terminate immediately
+   upon any breach of this License by you.
+
+10. GOVERNING LAW
+
+    This License shall be governed by the laws of the State of Delaware,
+    United States.
+
+11. COMMERCIAL LICENSING
+
+    For commercial licensing inquiries, please contact:
+
+        Lux Industries Inc.
+        Email: oss@lux.network
+
+================================================================================
+                          ATTRIBUTION
+================================================================================
+
+When using this Software for research purposes, please cite:
+
+    Lux Marketplace: Decentralized AI Compute and Model Exchange
+    Copyright (c) 2020-2025 Lux Industries Inc.
+    https://lux.network
+
+================================================================================
+
+END OF LICENSE TERMS
