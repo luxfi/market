@@ -70,6 +70,16 @@ const reservoirKitThemeOverrides = {
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <WagmiConfig client={wagmiClient}>
       <ChainContextProvider>
