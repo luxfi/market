@@ -1,0 +1,37 @@
+name: Sync dev branches
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Sync vpn with dev
+        run: |
+          git fetch --unshallow
+          git checkout vpn
+          git pull
+          git merge --no-ff dev -m "Auto-merge dev into vpn"
+          git push
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+          notification_title: 'Syncing Explorer Dev Branches failed'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to Repo <{repo_url}|{repo}>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}

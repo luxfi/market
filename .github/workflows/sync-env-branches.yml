@@ -1,0 +1,49 @@
+name: Sync branches with main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+          git fetch --unshallow
+      - name: Sync testnet with main
+        run: |
+          git checkout testnets
+          git pull
+          git merge --no-ff main -m "Auto-merge main into testnet"
+          git push
+      - name: Sync default with main
+        run: |
+          git checkout default
+          git pull
+          git merge --no-ff main -m "Auto-merge main into default"
+          git push
+      - name: Sync privy with main
+        run: |
+          git checkout privy
+          git pull
+          git merge --no-ff main -m "Auto-merge main into privy"
+          git push
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+          notification_title: 'Syncing Explorer Branches failed'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: 'Linked to Repo <{repo_url}|{repo}>'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
