@@ -1,56 +1,31 @@
 {
   "name": "@luxfi/market",
-  "version": "1.0.17",
+  "version": "1.0.0",
+  "description": "Lux NFT Marketplace - Genesis NFTs, trading, and NFT AMM",
   "private": true,
-  "license": "BSD-3-Clause",
-  "author": "Lux Partners Limited <dev@lux.partners> (https://lux.partners)",
+  "license": "GPL-3.0-or-later",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3100",
     "build": "next build",
-    "prod": "next start",
-    "cn": "rm -rf ./.next",
-    "clean": "rm -rf ./.next && rm -rf node_modules",
-    "tc": "tsc --noEmit"
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@luxfi/ui": "5.5.2",
-    "@luxfi/data": "1.1.1",
-    "@hanzo/auth": "2.5.5",
-    "@hanzo/commerce": "7.3.8",
-    "@hanzo/ui": "5.3.22",
-    "@hookform/resolvers": "^3.3.4",
-    "@next/mdx": "14.1.0",
-    "@splinetool/react-spline": "^2.2.6",
-    "@splinetool/runtime": "^1.0.68",
-    "ethers": "^6.11.1",
-    "lucide-react": "0.470.0",
-    "mobx": "^6.12.3",
-    "mobx-react-lite": "^4.0.7",
-    "mobx-utils": "^6.0.8",
-    "next": "15.1.6",
-    "next-themes": "^0.2.1",
-    "next-usequerystate": "^1.17.0",
-    "postcss-selector-parser": "^6.0.13",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-hook-form": "7.54.2",
-    "supports-color": "9.4.0",
-    "zod": "3.23.8"
+    "@rainbow-me/rainbowkit": "2.1.2",
+    "@tanstack/react-query": "5.77.2",
+    "next": "15.5.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "viem": "2.43.3",
+    "wagmi": "2.15.5"
   },
   "devDependencies": {
-    "@mdx-js/loader": "^3.0.0",
-    "@mdx-js/react": "^3.0.0",
-    "@svgr/webpack": "^8.1.0",
-    "@types/mdx": "^2.0.9",
-    "@types/node": "22.10.6",
-    "@types/react": "18.3.14",
-    "@types/react-dom": "18.3.2",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24",
-    "postcss-import": "^15.1.0",
-    "tailwindcss": "3.4.17",
-    "typescript": "5.7.3"
-  
-  },
-  "packageManager": "pnpm@10.12.4"
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "22.13.1",
+    "@types/react": "19.1.5",
+    "@types/react-dom": "19.1.5",
+    "tailwindcss": "4.1.18",
+    "typescript": "5.8.3"
+  }
 }

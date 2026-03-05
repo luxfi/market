@@ -1,22 +1,40 @@
-import React, { type PropsWithChildren } from 'react'
-import type { Viewport, Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { ClientProviders } from './client-providers'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'market - LUX',
+  title: {
+    default: 'Lux Market - NFT Marketplace',
+    template: '%s | Lux Market',
+  },
+  description:
+    'Trade NFTs across all Lux chains. Seaport-powered P2P trading with LSSVM AMM liquidity pools. Genesis NFTs with permanent LUX staking rewards.',
+  openGraph: {
+    title: 'Lux Market',
+    description: 'The NFT marketplace for the Lux ecosystem',
+    url: 'https://lux.market',
+    siteName: 'Lux Market',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lux Market',
+    description: 'Trade NFTs across all Lux chains',
+  },
+  robots: { index: true, follow: true },
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0a0a0a',
 }
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' className='dark'>
-      <body className='bg-black text-white flex flex-col min-h-full'>
-        {children}
+    <html lang="en">
+      <body>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   )
