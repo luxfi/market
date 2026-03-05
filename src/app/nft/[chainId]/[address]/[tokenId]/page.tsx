@@ -3,6 +3,7 @@
 import { use } from 'react'
 import { useAccount } from 'wagmi'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { ListingForm } from '@/components/ListingForm'
 import { OfferForm } from '@/components/OfferForm'
@@ -10,11 +11,10 @@ import { ActivityRow } from '@/components/ActivityRow'
 import { useTokenInstance, useTokenInstanceTransfers } from '@/hooks/useNFTData'
 import { getNftImageUrl, resolveMediaUrl } from '@/lib/explorer'
 import { CHAIN_INFO, EXPLORER_API } from '@/lib/chains'
+import { shortenAddress } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { ExternalLink } from 'lucide-react'
 import type { Address } from 'viem'
-
-function shortenAddress(addr: string): string {
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-}
 
 export default function NFTDetailPage({
   params,
@@ -39,24 +39,14 @@ export default function NFTDetailPage({
   return (
     <div>
       <Header />
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
+      <main className="max-w-[1200px] mx-auto px-6 py-8">
         {isLoading ? (
-          <div style={{ textAlign: 'center', padding: 64, color: 'var(--muted)' }}>Loading NFT...</div>
+          <div className="text-center py-16 text-muted-foreground">Loading NFT...</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 32, alignItems: 'start' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 items-start">
             {/* Left: Media */}
             <div>
-              <div
-                style={{
-                  aspectRatio: '1',
-                  borderRadius: 16,
-                  border: '1px solid var(--border)',
-                  overflow: 'hidden',
-                  maxWidth: 600,
-                  position: 'relative',
-                  background: '#111',
-                }}
-              >
+              <div className="aspect-square rounded-2xl border border-border overflow-hidden max-w-[600px] relative bg-secondary">
                 {animationUrl ? (
                   <video
                     src={animationUrl}
@@ -64,31 +54,19 @@ export default function NFTDetailPage({
                     loop
                     muted
                     playsInline
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    className="w-full h-full object-cover"
                   />
                 ) : imageUrl ? (
                   <Image
                     src={imageUrl}
                     alt={metadata?.name ?? `#${tokenId}`}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    className="object-cover"
                     unoptimized
                     sizes="600px"
                   />
                 ) : (
-                  <div
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-                      fontSize: 48,
-                      fontWeight: 700,
-                      color: '#333',
-                    }}
-                  >
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-muted text-5xl font-bold text-muted-foreground/30">
                     #{tokenId}
                   </div>
                 )}
@@ -96,143 +74,91 @@ export default function NFTDetailPage({
 
               {/* Description */}
               {metadata?.description && (
-                <div
-                  style={{
-                    marginTop: 16,
-                    background: 'var(--card)',
-                    borderRadius: 12,
-                    border: '1px solid var(--border)',
-                    padding: 16,
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
+                <Card className="mt-4 p-4">
+                  <div className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-widest">
                     Description
                   </div>
-                  <div style={{ fontSize: 14, color: 'var(--foreground)', lineHeight: 1.6 }}>
+                  <div className="text-sm text-foreground leading-relaxed">
                     {metadata.description}
                   </div>
-                </div>
+                </Card>
               )}
 
               {/* Traits */}
               {metadata?.attributes && metadata.attributes.length > 0 && (
-                <div
-                  style={{
-                    marginTop: 16,
-                    background: 'var(--card)',
-                    borderRadius: 12,
-                    border: '1px solid var(--border)',
-                    padding: 16,
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
+                <Card className="mt-4 p-4">
+                  <div className="text-xs text-muted-foreground mb-3 font-semibold uppercase tracking-widest">
                     Traits
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2">
                     {metadata.attributes.map((trait, i) => (
                       <div
                         key={`${trait.trait_type}-${i}`}
-                        style={{
-                          background: 'rgba(232,232,232,0.05)',
-                          borderRadius: 8,
-                          padding: '8px 12px',
-                          border: '1px solid var(--border)',
-                        }}
+                        className="bg-primary/5 rounded-lg px-3 py-2 border border-border"
                       >
-                        <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
+                        <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
                           {trait.trait_type}
                         </div>
-                        <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>
+                        <div className="text-[13px] font-semibold mt-0.5">
                           {String(trait.value)}
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                </Card>
               )}
 
               {/* Transfer History */}
               {transfers?.items && transfers.items.length > 0 && (
-                <div
-                  style={{
-                    marginTop: 16,
-                    background: 'var(--card)',
-                    borderRadius: 12,
-                    border: '1px solid var(--border)',
-                    padding: 16,
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
+                <Card className="mt-4 p-4">
+                  <div className="text-xs text-muted-foreground mb-3 font-semibold uppercase tracking-widest">
                     Transfer History
                   </div>
                   {transfers.items.slice(0, 20).map((t, i) => (
                     <ActivityRow key={`${t.tx_hash}-${i}`} transfer={t} chainId={chainId} />
                   ))}
-                </div>
+                </Card>
               )}
             </div>
 
             {/* Right: Details + Actions */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'sticky', top: 80 }}>
+            <div className="flex flex-col gap-4 lg:sticky lg:top-20">
               {/* Collection & Name */}
               <div>
-                <a
+                <Link
                   href={`/collection/${chainId}/${contractAddress}`}
-                  style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none' }}
+                  className="text-[13px] text-primary no-underline hover:underline"
                 >
                   {instance?.token?.name ?? 'Collection'}
-                </a>
-                <h1 style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>
+                </Link>
+                <h1 className="text-[28px] font-bold mt-1">
                   {metadata?.name ?? `#${tokenId}`}
                 </h1>
               </div>
 
               {/* Owner */}
-              <div
-                style={{
-                  background: 'var(--card)',
-                  borderRadius: 12,
-                  padding: 14,
-                  border: '1px solid var(--border)',
-                }}
-              >
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <Card className="p-3.5">
+                <div className="text-[11px] text-muted-foreground mb-1 uppercase tracking-widest">
                   Owner
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 14, fontFamily: 'monospace' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono">
                     {ownerAddress ? shortenAddress(ownerAddress) : '---'}
                   </span>
                   {isOwner && (
-                    <span
-                      style={{
-                        fontSize: 10,
-                        padding: '2px 6px',
-                        borderRadius: 4,
-                        background: 'rgba(0,200,100,0.1)',
-                        color: '#0c6',
-                        fontWeight: 600,
-                      }}
-                    >
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-success/10 text-success font-semibold">
                       YOU
                     </span>
                   )}
                 </div>
-              </div>
+              </Card>
 
               {/* Details */}
-              <div
-                style={{
-                  background: 'var(--card)',
-                  borderRadius: 12,
-                  padding: 14,
-                  border: '1px solid var(--border)',
-                }}
-              >
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <Card className="p-3.5">
+                <div className="text-[11px] text-muted-foreground mb-2 uppercase tracking-widest">
                   Details
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div className="flex flex-col gap-1.5">
                   {[
                     { label: 'Chain', value: chainInfo?.name ?? String(chainId), color: chainInfo?.color },
                     {
@@ -243,26 +169,30 @@ export default function NFTDetailPage({
                     { label: 'Token ID', value: tokenId },
                     { label: 'Token Standard', value: instance?.token?.type ?? 'ERC-721' },
                   ].map((row) => (
-                    <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
-                      <span style={{ color: 'var(--muted)' }}>{row.label}</span>
+                    <div key={row.label} className="flex justify-between text-[13px]">
+                      <span className="text-muted-foreground">{row.label}</span>
                       {row.href ? (
                         <a
                           href={row.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ fontFamily: 'monospace', color: 'var(--foreground)', textDecoration: 'none' }}
+                          className="font-mono text-foreground no-underline flex items-center gap-1 hover:underline"
                         >
-                          {row.value} &nearr;
+                          {row.value}
+                          <ExternalLink className="h-3 w-3" />
                         </a>
                       ) : (
-                        <span style={{ color: row.color, fontFamily: row.label === 'Token ID' ? 'monospace' : undefined }}>
+                        <span
+                          className={row.label === 'Token ID' ? 'font-mono' : ''}
+                          style={row.color ? { color: row.color } : undefined}
+                        >
                           {row.value}
                         </span>
                       )}
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
 
               {/* External links */}
               {metadata?.external_url && (
@@ -270,37 +200,20 @@ export default function NFTDetailPage({
                   href={metadata.external_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '10px',
-                    background: 'var(--card)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 10,
-                    color: 'var(--accent)',
-                    textDecoration: 'none',
-                    fontSize: 13,
-                  }}
+                  className="block text-center py-2.5 bg-card border border-border rounded-[10px] text-primary no-underline text-[13px] hover:bg-secondary transition-colors"
                 >
-                  View External &nearr;
+                  View External <ExternalLink className="inline h-3 w-3 ml-1" />
                 </a>
               )}
 
               {/* Trading Actions */}
-              <div
-                style={{
-                  background: 'var(--card)',
-                  borderRadius: 12,
-                  padding: 16,
-                  border: '1px solid var(--border)',
-                }}
-              >
+              <Card className="p-4">
                 {isOwner ? (
                   <ListingForm contractAddress={contractAddress as Address} tokenId={tokenId} />
                 ) : (
                   <OfferForm contractAddress={contractAddress as Address} tokenId={tokenId} />
                 )}
-              </div>
+              </Card>
             </div>
           </div>
         )}

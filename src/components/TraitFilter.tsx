@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { ChevronUp, ChevronDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { NFTTrait } from '@/lib/explorer'
 
 interface TraitGroup {
@@ -50,28 +52,13 @@ export function TraitFilter({ instances, selectedTraits, onTraitToggle, onClear 
   if (traitGroups.length === 0) return null
 
   return (
-    <div
-      style={{
-        background: 'var(--card)',
-        borderRadius: 12,
-        border: '1px solid var(--border)',
-        padding: 16,
-        width: 240,
-        flexShrink: 0,
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <div style={{ fontSize: 14, fontWeight: 600 }}>Traits</div>
+    <div className="bg-card rounded-xl border border-border p-4 w-60 shrink-0">
+      <div className="flex justify-between items-center mb-3">
+        <div className="text-sm font-semibold">Traits</div>
         {hasSelected && (
           <button
             onClick={onClear}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--accent)',
-              fontSize: 12,
-              cursor: 'pointer',
-            }}
+            className="bg-transparent border-none text-primary text-xs cursor-pointer hover:underline"
           >
             Clear all
           </button>
@@ -84,7 +71,7 @@ export function TraitFilter({ instances, selectedTraits, onTraitToggle, onClear 
         const activeCount = selected?.size ?? 0
 
         return (
-          <div key={group.trait_type} style={{ marginBottom: 4 }}>
+          <div key={group.trait_type} className="mb-1">
             <button
               onClick={() => {
                 const next = new Set(expandedGroups)
@@ -92,54 +79,39 @@ export function TraitFilter({ instances, selectedTraits, onTraitToggle, onClear 
                 else next.add(group.trait_type)
                 setExpandedGroups(next)
               }}
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '8px 0',
-                background: 'none',
-                border: 'none',
-                color: 'var(--foreground)',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: 500,
-              }}
+              className="w-full flex justify-between items-center py-2 bg-transparent border-none text-foreground cursor-pointer text-[13px] font-medium"
             >
               <span>
                 {group.trait_type}
                 {activeCount > 0 && (
-                  <span style={{ marginLeft: 6, color: 'var(--accent)', fontSize: 11 }}>({activeCount})</span>
+                  <span className="ml-1.5 text-primary text-[11px]">({activeCount})</span>
                 )}
               </span>
-              <span style={{ fontSize: 10, color: 'var(--muted)' }}>{isExpanded ? '\u25B2' : '\u25BC'}</span>
+              {isExpanded ? (
+                <ChevronUp className="h-3 w-3 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-3 w-3 text-muted-foreground" />
+              )}
             </button>
             {isExpanded && (
-              <div style={{ paddingLeft: 4, paddingBottom: 8, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <div className="pl-1 pb-2 flex flex-col gap-0.5">
                 {group.values.slice(0, 20).map((v) => {
                   const isActive = selected?.has(v.value) ?? false
                   return (
                     <button
                       key={v.value}
                       onClick={() => onTraitToggle(group.trait_type, v.value)}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '4px 8px',
-                        borderRadius: 6,
-                        background: isActive ? 'rgba(232,232,232,0.1)' : 'transparent',
-                        border: isActive ? '1px solid var(--accent)' : '1px solid transparent',
-                        color: isActive ? 'var(--foreground)' : 'var(--muted)',
-                        cursor: 'pointer',
-                        fontSize: 12,
-                        textAlign: 'left',
-                      }}
+                      className={cn(
+                        'flex justify-between items-center px-2 py-1 rounded-md cursor-pointer text-xs text-left border transition-colors',
+                        isActive
+                          ? 'bg-primary/10 border-primary/50 text-foreground'
+                          : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary'
+                      )}
                     >
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                         {v.value}
                       </span>
-                      <span style={{ fontSize: 11, flexShrink: 0, marginLeft: 8 }}>{v.count}</span>
+                      <span className="text-[11px] shrink-0 ml-2 font-mono">{v.count}</span>
                     </button>
                   )
                 })}

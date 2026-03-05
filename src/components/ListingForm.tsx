@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { parseEther, type Address } from 'viem'
 import { useWriteContract, useAccount, useChainId } from 'wagmi'
 import { CONTRACTS, MARKET_ABI, ERC721_ABI } from '@/lib/contracts'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 interface ListingFormProps {
   contractAddress: Address
@@ -51,43 +53,26 @@ export function ListingForm({ contractAddress, tokenId }: ListingFormProps) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <h3 style={{ fontSize: 16, fontWeight: 600 }}>List for Sale</h3>
+    <div className="flex flex-col gap-3">
+      <h3 className="text-base font-semibold">List for Sale</h3>
       <div>
-        <label style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>Price (LUX)</label>
-        <input
+        <label className="text-xs text-muted-foreground block mb-1">Price (LUX)</label>
+        <Input
           type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           placeholder="0.0"
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            color: 'var(--foreground)',
-            fontSize: 16,
-            outline: 'none',
-          }}
+          className="h-10 text-base bg-card"
         />
       </div>
       <div>
-        <label style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>
+        <label className="text-xs text-muted-foreground block mb-1">
           Duration (days)
         </label>
         <select
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            color: 'var(--foreground)',
-            fontSize: 14,
-          }}
+          className="w-full h-10 px-3 bg-card border border-input rounded-md text-foreground text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           <option value="1">1 day</option>
           <option value="3">3 days</option>
@@ -96,40 +81,22 @@ export function ListingForm({ contractAddress, tokenId }: ListingFormProps) {
           <option value="30">30 days</option>
         </select>
       </div>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          className="flex-1"
           onClick={handleApproveAndList}
           disabled={isPending || !price}
-          style={{
-            flex: 1,
-            padding: '12px',
-            background: 'transparent',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            color: 'var(--foreground)',
-            cursor: isPending ? 'wait' : 'pointer',
-            fontSize: 14,
-          }}
         >
           Approve
-        </button>
-        <button
+        </Button>
+        <Button
+          className="flex-1"
           onClick={handleList}
           disabled={isPending || !price}
-          style={{
-            flex: 1,
-            padding: '12px',
-            background: 'var(--accent)',
-            border: 'none',
-            borderRadius: 8,
-            color: '#000',
-            fontWeight: 600,
-            cursor: isPending ? 'wait' : 'pointer',
-            fontSize: 14,
-          }}
         >
           {isPending ? 'Listing...' : 'List NFT'}
-        </button>
+        </Button>
       </div>
     </div>
   )

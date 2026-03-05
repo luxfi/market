@@ -16,78 +16,41 @@ export function CollectionCard({ token, chainId, rank }: CollectionCardProps) {
   return (
     <Link
       href={`/collection/${chainId}/${token.address}`}
-      style={{ textDecoration: 'none', color: 'inherit' }}
+      className="no-underline text-inherit"
     >
-      <div
-        style={{
-          background: 'var(--card)',
-          borderRadius: 12,
-          padding: 16,
-          border: '1px solid var(--border)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 16,
-          transition: 'all 150ms ease',
-          cursor: 'pointer',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = '#333'
-          e.currentTarget.style.background = 'var(--card-hover)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--border)'
-          e.currentTarget.style.background = 'var(--card)'
-        }}
-      >
+      <div className="bg-card rounded-xl p-4 border border-border flex items-center gap-4 transition-colors cursor-pointer hover:border-muted-foreground/30 hover:bg-secondary/50">
         {rank !== undefined && (
-          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--muted)', width: 24, textAlign: 'center' }}>
+          <div className="text-sm font-bold text-muted-foreground w-6 text-center font-mono">
             {rank}
           </div>
         )}
         {/* Collection icon */}
         <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 10,
-            background: token.icon_url
-              ? `url(${token.icon_url}) center/cover`
-              : 'linear-gradient(135deg, #1a1a2e, #0f3460)',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 20,
-            fontWeight: 700,
-            color: '#333',
-          }}
+          className="w-14 h-14 rounded-[10px] shrink-0 flex items-center justify-center text-xl font-bold text-muted-foreground/30 bg-cover bg-center"
+          style={
+            token.icon_url
+              ? { backgroundImage: `url(${token.icon_url})` }
+              : { background: 'linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)))' }
+          }
         >
           {!token.icon_url && (token.symbol?.charAt(0) ?? '?')}
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
+        <div className="flex-1 min-w-0">
+          <div className="text-[15px] font-semibold truncate">
             {token.name}
           </div>
-          <div style={{ display: 'flex', gap: 16, marginTop: 4, fontSize: 12, color: 'var(--muted)' }}>
+          <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
             <span>{token.type}</span>
             {chainInfo && (
               <span style={{ color: chainInfo.color }}>{chainInfo.name}</span>
             )}
           </div>
         </div>
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <div style={{ fontSize: 13 }}>
+        <div className="text-right shrink-0">
+          <div className="text-[13px]">
             {token.holders ? Number(token.holders).toLocaleString() : '---'} holders
           </div>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+          <div className="text-[11px] text-muted-foreground mt-0.5">
             {token.total_supply ? Number(token.total_supply).toLocaleString() : '---'} items
           </div>
         </div>

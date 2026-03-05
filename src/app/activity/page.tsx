@@ -28,38 +28,26 @@ export default function ActivityPage() {
   return (
     <div>
       <Header />
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
-        <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 8 }}>Activity</h1>
-        <p style={{ color: 'var(--muted)', marginBottom: 32, fontSize: 14 }}>
+      <main className="max-w-[1200px] mx-auto px-6 py-8">
+        <h1 className="text-3xl font-bold mb-2">Activity</h1>
+        <p className="text-muted-foreground mb-8 text-sm">
           Recent NFT transfers, mints, and sales across all collections.
         </p>
 
         {/* Column headers */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: '8px 0',
-            borderBottom: '1px solid var(--border)',
-            fontSize: 11,
-            color: 'var(--muted)',
-            textTransform: 'uppercase',
-            letterSpacing: 1,
-          }}
-        >
-          <div style={{ width: 72, textAlign: 'center' }}>Event</div>
-          <div style={{ flex: 1 }}>Item</div>
-          <div style={{ width: 200, textAlign: 'center' }}>From / To</div>
-          <div style={{ width: 40, textAlign: 'right' }}>Chain</div>
-          <div style={{ width: 80, textAlign: 'right' }}>Date</div>
-          <div style={{ width: 20 }} />
+        <div className="flex items-center gap-3 py-2 border-b border-border text-[11px] text-muted-foreground uppercase tracking-widest">
+          <div className="w-[72px] text-center">Event</div>
+          <div className="flex-1">Item</div>
+          <div className="w-[200px] text-center">From / To</div>
+          <div className="w-10 text-right">Chain</div>
+          <div className="w-20 text-right">Date</div>
+          <div className="w-5" />
         </div>
 
         {isLoading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: 'var(--muted)' }}>Loading activity...</div>
+          <div className="text-center py-12 text-muted-foreground">Loading activity...</div>
         ) : !data?.items?.length ? (
-          <div style={{ textAlign: 'center', padding: 48, color: 'var(--muted)' }}>
+          <div className="text-center py-12 text-muted-foreground">
             No NFT activity found on this chain yet.
           </div>
         ) : (
