@@ -1,9 +1,10 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
-import { luxMainnet, zooMainnet, hanzoMainnet, spcMainnet, parsMainnet } from './chains'
+import { createConfig, http } from 'wagmi'
+import { injected } from 'wagmi/connectors'
+import { supportedChains } from './chains'
 
-export const config = getDefaultConfig({
-  appName: 'Lux Market',
-  projectId: 'a739fdd0c00cbb93bc06df1e27a83d63',
-  chains: [luxMainnet, zooMainnet, hanzoMainnet, spcMainnet, parsMainnet],
+export const config = createConfig({
+  chains: supportedChains,
+  connectors: [injected()],
+  transports: Object.fromEntries(supportedChains.map((c) => [c.id, http()])) as any,
   ssr: true,
 })

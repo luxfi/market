@@ -1,10 +1,15 @@
 'use client'
 
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { injected } from 'wagmi/connectors'
 import { useChainContext } from '@/hooks/useChain'
 import { CHAIN_INFO } from '@/lib/chains'
+import { Button } from '@/components/ui/button'
+import { Wallet, LogOut } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { shortenAddress } from '@/lib/utils'
 
 const NAV_LINKS = [
   { href: '/', label: 'Explore' },
@@ -19,51 +24,32 @@ const CHAIN_IDS = [96369, 200200, 36963, 36911, 494949]
 export function Header() {
   const pathname = usePathname()
   const { chainId, setChainId } = useChainContext()
+  const { address, isConnected } = useAccount()
+  const { connect } = useConnect()
+  const { disconnect } = useDisconnect()
 
   return (
-    <header
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '12px 24px',
-        borderBottom: '1px solid var(--border)',
-        position: 'sticky',
-        top: 0,
-        background: 'rgba(10, 10, 10, 0.85)',
-        backdropFilter: 'blur(12px)',
-        zIndex: 100,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+    <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b border-border bg-background/80 backdrop-blur-xl">
+      <div className="flex items-center gap-8">
         <Link
           href="/"
-          style={{
-            textDecoration: 'none',
-            color: 'var(--foreground)',
-            fontSize: 18,
-            fontWeight: 700,
-            letterSpacing: '-0.02em',
-          }}
+          className="text-lg font-bold tracking-tight text-foreground no-underline"
         >
           Lux Market
         </Link>
-        <nav style={{ display: 'flex', gap: 4 }}>
+        <nav className="flex gap-1">
           {NAV_LINKS.map((link) => {
             const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href)
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                style={{
-                  textDecoration: 'none',
-                  color: isActive ? 'var(--foreground)' : 'var(--muted)',
-                  fontSize: 14,
-                  padding: '6px 12px',
-                  borderRadius: 8,
-                  background: isActive ? 'var(--card)' : 'transparent',
-                  transition: 'all 150ms ease',
-                }}
+                className={cn(
+                  'px-3 py-1.5 rounded-lg text-sm no-underline transition-colors',
+                  isActive
+                    ? 'text-foreground bg-card'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
               >
                 {link.label}
               </Link>
@@ -72,9 +58,9 @@ export function Header() {
         </nav>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="flex items-center gap-3">
         {/* Chain selector */}
-        <div style={{ display: 'flex', gap: 2, background: 'var(--card)', borderRadius: 8, padding: 2 }}>
+        <div className="flex gap-0.5 bg-card rounded-lg p-0.5">
           {CHAIN_IDS.map((id) => {
             const info = CHAIN_INFO[id]
             const isActive = chainId === id
@@ -83,17 +69,13 @@ export function Header() {
                 key={id}
                 onClick={() => setChainId(id)}
                 title={info.name}
-                style={{
-                  padding: '6px 10px',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  border: 'none',
-                  borderRadius: 6,
-                  cursor: 'pointer',
-                  background: isActive ? info.color : 'transparent',
-                  color: isActive ? '#000' : 'var(--muted)',
-                  transition: 'all 150ms ease',
-                }}
+                className={cn(
+                  'px-2.5 py-1.5 text-xs font-semibold rounded-md cursor-pointer transition-colors border-none',
+                  isActive
+                    ? 'text-black'
+                    : 'text-muted-foreground bg-transparent hover:text-foreground'
+                )}
+                style={isActive ? { background: info.color } : undefined}
               >
                 {info.name}
               </button>
@@ -105,19 +87,35 @@ export function Header() {
           href="https://exchange.lux.network"
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            textDecoration: 'none',
-            color: 'var(--muted)',
-            fontSize: 13,
-            padding: '6px 12px',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-          }}
+          className="px-3 py-1.5 text-[13px] text-muted-foreground no-underline border border-border rounded-lg hover:text-foreground transition-colors"
         >
           Exchange
         </a>
 
-        <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
+        {isConnected ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-mono text-muted-foreground">
+              {address ? shortenAddress(address) : ''}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => disconnect()}
+              title="Disconnect"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="connect"
+            size="sm"
+            onClick={() => connect({ connector: injected() })}
+          >
+            <Wallet className="h-4 w-4" />
+            Connect
+          </Button>
+        )}
       </div>
     </header>
   )

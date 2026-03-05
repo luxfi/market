@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchCollections } from '@/hooks/useNFTData'
 import { useChainContext } from '@/hooks/useChain'
+import { Input } from '@/components/ui/input'
+import { Search } from 'lucide-react'
 
 export function SearchBar() {
   const [query, setQuery] = useState('')
@@ -27,45 +29,23 @@ export function SearchBar() {
   ) ?? []
 
   return (
-    <div ref={ref} style={{ position: 'relative', width: '100%', maxWidth: 480 }}>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value)
-          setIsOpen(true)
-        }}
-        onFocus={() => setIsOpen(true)}
-        placeholder="Search collections, NFTs..."
-        style={{
-          width: '100%',
-          padding: '10px 16px',
-          background: 'var(--card)',
-          border: '1px solid var(--border)',
-          borderRadius: 10,
-          color: 'var(--foreground)',
-          fontSize: 14,
-          outline: 'none',
-        }}
-      />
-      {isOpen && query.length >= 2 && nftResults.length > 0 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            marginTop: 4,
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 12,
-            padding: 8,
-            maxHeight: 320,
-            overflowY: 'auto',
-            zIndex: 200,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+    <div ref={ref} className="relative w-full max-w-[480px]">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="text"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value)
+            setIsOpen(true)
           }}
-        >
+          onFocus={() => setIsOpen(true)}
+          placeholder="Search collections, NFTs..."
+          className="pl-9 h-10 rounded-[10px] bg-card"
+        />
+      </div>
+      {isOpen && query.length >= 2 && nftResults.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl p-2 max-h-80 overflow-y-auto z-[200] shadow-xl shadow-black/40">
           {nftResults.map((item: { address: string; name: string; symbol: string; type: string; icon_url: string | null }) => (
             <Link
               key={item.address}
@@ -74,41 +54,21 @@ export function SearchBar() {
                 setIsOpen(false)
                 setQuery('')
               }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '8px 12px',
-                borderRadius: 8,
-                textDecoration: 'none',
-                color: 'var(--foreground)',
-                transition: 'background 100ms ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--card-hover)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg no-underline text-foreground transition-colors hover:bg-secondary"
             >
               <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  background: item.icon_url
-                    ? `url(${item.icon_url}) center/cover`
-                    : 'linear-gradient(135deg, #1a1a2e, #0f3460)',
-                  flexShrink: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 14,
-                  fontWeight: 700,
-                  color: '#444',
-                }}
+                className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center text-sm font-bold text-muted-foreground/50 bg-cover bg-center"
+                style={
+                  item.icon_url
+                    ? { backgroundImage: `url(${item.icon_url})` }
+                    : { background: 'linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)))' }
+                }
               >
                 {!item.icon_url && (item.symbol?.charAt(0) ?? '?')}
               </div>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 500 }}>{item.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)' }}>{item.type}</div>
+                <div className="text-sm font-medium">{item.name}</div>
+                <div className="text-[11px] text-muted-foreground">{item.type}</div>
               </div>
             </Link>
           ))}
