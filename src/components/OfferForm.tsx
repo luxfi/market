@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { parseEther, type Address } from 'viem'
 import { useWriteContract, useChainId } from 'wagmi'
 import { CONTRACTS, MARKET_ABI } from '@/lib/contracts'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 interface OfferFormProps {
   contractAddress: Address
@@ -39,43 +41,26 @@ export function OfferForm({ contractAddress, tokenId }: OfferFormProps) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <h3 style={{ fontSize: 16, fontWeight: 600 }}>Make an Offer</h3>
+    <div className="flex flex-col gap-3">
+      <h3 className="text-base font-semibold">Make an Offer</h3>
       <div>
-        <label style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>
+        <label className="text-xs text-muted-foreground block mb-1">
           Offer Amount (LUX)
         </label>
-        <input
+        <Input
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="0.0"
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            color: 'var(--foreground)',
-            fontSize: 16,
-            outline: 'none',
-          }}
+          className="h-10 text-base bg-card"
         />
       </div>
       <div>
-        <label style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>Expires in</label>
+        <label className="text-xs text-muted-foreground block mb-1">Expires in</label>
         <select
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px 12px',
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            color: 'var(--foreground)',
-            fontSize: 14,
-          }}
+          className="w-full h-10 px-3 bg-card border border-input rounded-md text-foreground text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           <option value="1">1 day</option>
           <option value="3">3 days</option>
@@ -83,23 +68,13 @@ export function OfferForm({ contractAddress, tokenId }: OfferFormProps) {
           <option value="14">14 days</option>
         </select>
       </div>
-      <button
+      <Button
+        className="w-full"
         onClick={handleOffer}
         disabled={isPending || !amount}
-        style={{
-          width: '100%',
-          padding: '12px',
-          background: 'var(--accent)',
-          border: 'none',
-          borderRadius: 8,
-          color: '#000',
-          fontWeight: 600,
-          cursor: isPending ? 'wait' : 'pointer',
-          fontSize: 14,
-        }}
       >
         {isPending ? 'Submitting...' : 'Make Offer'}
-      </button>
+      </Button>
     </div>
   )
 }
