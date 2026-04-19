@@ -1,16 +1,20 @@
 // Stubs — replace when @luxfi/hooks is published or inlined from its real source.
-// Accept any args so pages that pass (chainId, address) etc. still typecheck.
-type Empty = { data: never[]; isLoading: false; error: null }
-const empty: Empty = { data: [], isLoading: false, error: null }
+// Return a shape that looks like the real paginated response so consumers don't break.
 
-type NullData = { data: null; isLoading: false; error: null }
-const nullData: NullData = { data: null, isLoading: false, error: null }
+type Paginated<T = unknown> = { items: T[]; next_page_params: null }
+const emptyPage = <T,>(): { data: Paginated<T>; isLoading: false; error: null } => ({
+  data: { items: [], next_page_params: null },
+  isLoading: false,
+  error: null,
+})
 
-export const useCollections = (..._: unknown[]) => empty
-export const useCollection = (..._: unknown[]) => nullData
-export const useTokenInstances = (..._: unknown[]) => empty
-export const useTokenInstance = (..._: unknown[]) => nullData
-export const useTokenInstanceTransfers = (..._: unknown[]) => empty
-export const useCollectionTransfers = (..._: unknown[]) => empty
-export const usePortfolioNFTs = (..._: unknown[]) => empty
-export const useSearchCollections = (..._: unknown[]) => empty
+const nullRow = { data: null, isLoading: false as const, error: null }
+
+export const useCollections = (..._: unknown[]) => emptyPage()
+export const useCollection = (..._: unknown[]) => nullRow
+export const useTokenInstances = (..._: unknown[]) => emptyPage()
+export const useTokenInstance = (..._: unknown[]) => nullRow
+export const useTokenInstanceTransfers = (..._: unknown[]) => emptyPage()
+export const useCollectionTransfers = (..._: unknown[]) => emptyPage()
+export const usePortfolioNFTs = (..._: unknown[]) => emptyPage()
+export const useSearchCollections = (..._: unknown[]) => emptyPage()
