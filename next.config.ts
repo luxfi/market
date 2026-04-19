@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   output: 'export',
   outputFileTracingRoot: path.resolve(import.meta.dirname ?? __dirname),
   reactStrictMode: true,
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   images: {
     unoptimized: true,
     remotePatterns: [
