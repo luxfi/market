@@ -2,10 +2,11 @@ import path from 'path'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: 'export',
   outputFileTracingRoot: path.resolve(import.meta.dirname ?? __dirname),
   reactStrictMode: true,
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: '*.lux.network' },
       { protocol: 'https', hostname: 'ipfs.io' },
