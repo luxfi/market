@@ -7,5 +7,5 @@ COPY . .
 RUN pnpm build
 
 FROM ghcr.io/hanzoai/spa
-COPY --from=build /app/dist /public
+COPY --from=build /app/out /public
 
