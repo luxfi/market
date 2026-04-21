@@ -15,22 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.bump.outputs.version }}
-      is_tag: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
-      - name: Compute version
+      - name: Compute + tag version
         id: bump
         run: |
           set -e
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
-            echo "Using tag version: $VERSION"
           else
-            # Auto-bump patch from last v-tag
             LAST=$(git tag -l 'v*' --sort=-v:refname | head -1)
             if [ -z "$LAST" ]; then
               NEW="0.1.0"
@@ -38,24 +35,23 @@ jobs:
               MAJOR=$(echo "${LAST#v}" | cut -d. -f1)
               MINOR=$(echo "${LAST#v}" | cut -d. -f2)
               PATCH=$(echo "${LAST#v}" | cut -d. -f3)
-              # feat: → minor bump, else → patch bump
               MSG=$(git log -1 --pretty=%s)
               if [[ "$MSG" =~ ^feat[\(:] ]]; then
                 NEW="$MAJOR.$((MINOR+1)).0"
-              elif [[ "$MSG" =~ ^BREAKING|!: ]]; then
+              elif [[ "$MSG" =~ BREAKING\ CHANGE|! ]]; then
                 NEW="$((MAJOR+1)).0.0"
               else
                 NEW="$MAJOR.$MINOR.$((PATCH+1))"
               fi
             fi
             VERSION="$NEW"
-            # Tag the commit
             git config user.name 'github-actions[bot]'
             git config user.email 'github-actions[bot]@users.noreply.github.com'
-            git tag "v$VERSION"
+            git tag "v$VERSION" || true
             git push origin "v$VERSION" || echo "tag push skipped"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION"
 
   build-push:
     needs: version
