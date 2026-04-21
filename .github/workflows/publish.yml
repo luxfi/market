@@ -21,27 +21,26 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Compute + tag version
+      - name: Compute + tag version (v1.x.x — no major bumps)
         id: bump
         run: |
           set -e
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
           else
-            LAST=$(git tag -l 'v*' --sort=-v:refname | head -1)
+            LAST=$(git tag -l 'v1.*' --sort=-v:refname | head -1)
             if [ -z "$LAST" ]; then
-              NEW="0.1.0"
+              NEW="1.0.0"
             else
-              MAJOR=$(echo "${LAST#v}" | cut -d. -f1)
-              MINOR=$(echo "${LAST#v}" | cut -d. -f2)
-              PATCH=$(echo "${LAST#v}" | cut -d. -f3)
+              MINOR=$(echo "${LAST#v1.}" | cut -d. -f1)
+              PATCH=$(echo "${LAST#v1.}" | cut -d. -f2)
               MSG=$(git log -1 --pretty=%s)
-              if [[ "$MSG" =~ ^feat[\(:] ]]; then
-                NEW="$MAJOR.$((MINOR+1)).0"
-              elif [[ "$MSG" =~ BREAKING\ CHANGE|! ]]; then
-                NEW="$((MAJOR+1)).0.0"
+              # feat: or BREAKING → minor bump, else → patch bump
+              # NO MAJOR BUMPS — capped at v1.x.x
+              if [[ "$MSG" =~ ^(feat|BREAKING|[a-z]+!) ]]; then
+                NEW="1.$((MINOR+1)).0"
               else
-                NEW="$MAJOR.$MINOR.$((PATCH+1))"
+                NEW="1.$MINOR.$((PATCH+1))"
               fi
             fi
             VERSION="$NEW"
