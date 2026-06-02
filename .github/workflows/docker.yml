@@ -14,4 +14,7 @@ jobs:
     uses: hanzoai/.github/.github/workflows/docker-build.yml@main
     with:
       image: ghcr.io/luxfi/market
+      runner-amd64: luxfi-amd64
+      runner-arm64: luxfi-arm64
+      runner-deploy: lux-deploy-linux-amd64
     secrets: inherit
