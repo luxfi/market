@@ -1,4 +1,4 @@
-# LLM.md - Hanzo Marketplace
+# Hanzo Marketplace
 
 ## Overview
 Lux NFT Marketplace - Genesis NFTs, trading, and NFT AMM
