@@ -16,6 +16,9 @@ jobs:
     with:
       image: ghcr.io/luxfi/market
       platforms: linux/amd64
-      runner-amd64: '["self-hosted","linux","amd64"]'
-      runner-deploy: '["self-hosted","linux","amd64"]'
+      # ARC scale-set targeting: jobs must use the scale-set NAME as the
+      # runs-on label (githubConfigUrl=github.com/luxfi, set name=lux-build).
+      # fromJson() in the reusable decodes this string to a scalar label.
+      runner-amd64: '"lux-build"'
+      runner-deploy: '"lux-build"'
     secrets: inherit
