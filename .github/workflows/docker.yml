@@ -1,17 +1,18 @@
-name: Docker
+name: Docker Build
+
 on:
   workflow_dispatch:
   push:
-    branches: [main, dev, test]
     tags: ['v*']
 
-permissions:
-  contents: read
-  packages: write
+# NOTE: do NOT add a top-level `permissions:` block. Combined with
+# `secrets: inherit` on a cross-org `uses:` it triggers silent
+# startup_failure on the reusable workflow. The reusable's job-level
+# permissions are sufficient.
 
 jobs:
   docker:
-    uses: hanzoai/.github/.github/workflows/docker-build.yml@main
+    uses: luxfi/.github/.github/workflows/docker.yml@main
     with:
       image: ghcr.io/luxfi/market
       platforms: linux/amd64
