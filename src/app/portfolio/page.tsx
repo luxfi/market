@@ -12,7 +12,9 @@ import { Wallet } from 'lucide-react'
 import { useConnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 
-const ALL_CHAIN_IDS = [96369, 200200, 36963, 36911, 494949]
+// Derive from CHAIN_INFO (single source of truth) — a hardcoded id without a
+// CHAIN_INFO entry crashes on `.name`. Keeps portfolio chains in sync with config.
+const ALL_CHAIN_IDS = Object.keys(CHAIN_INFO).map(Number)
 
 function ChainPortfolio({ chainId, walletAddress }: { chainId: number; walletAddress: string }) {
   const { data, isLoading } = usePortfolioNFTs(chainId, walletAddress)

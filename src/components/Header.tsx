@@ -19,7 +19,10 @@ const NAV_LINKS = [
   { href: '/portfolio', label: 'Portfolio' },
 ]
 
-const CHAIN_IDS = [96369, 200200, 36963, 36911, 494949]
+// Single source of truth: the chains we have metadata for. Deriving from
+// CHAIN_INFO prevents drift (a hardcoded id with no CHAIN_INFO entry crashed
+// the header on `info.name` and white-screened the app).
+const CHAIN_IDS = Object.keys(CHAIN_INFO).map(Number)
 
 export function Header() {
   const pathname = usePathname()
