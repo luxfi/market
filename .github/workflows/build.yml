@@ -1,24 +1,46 @@
 name: Docker Build
 
+# Self-contained single-arch (linux/amd64) build on the `lux-build` ARC
+# scale-set. market is a PUBLIC repo, so it cannot call the PRIVATE
+# luxfi/.github reusable workflow ("workflow was not found") — the build is
+# inlined here. Cluster nodes are amd64; arm64 is intentionally not built.
+
 on:
   workflow_dispatch:
   push:
     tags: ['v*']
 
-# NOTE: do NOT add a top-level `permissions:` block. Combined with
-# `secrets: inherit` on a cross-org `uses:` it triggers silent
-# startup_failure on the reusable workflow. The reusable's job-level
-# permissions are sufficient.
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  docker:
-    uses: luxfi/.github/.github/workflows/docker.yml@main
-    with:
-      image: ghcr.io/luxfi/market
-      platforms: linux/amd64
-      # ARC scale-set targeting: jobs must use the scale-set NAME as the
-      # runs-on label (githubConfigUrl=github.com/luxfi, set name=lux-build).
-      # fromJson() in the reusable decodes this string to a scalar label.
-      runner-amd64: '"lux-build"'
-      runner-deploy: '"lux-build"'
-    secrets: inherit
+  build:
+    runs-on: lux-build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute tags
+        id: meta
+        run: |
+          set -e
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            v="${GITHUB_REF#refs/tags/v}"
+            echo "tags=ghcr.io/luxfi/market:${v}-amd64,ghcr.io/luxfi/market:latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "tags=ghcr.io/luxfi/market:sha-${GITHUB_SHA::7}-amd64" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha,scope=market-amd64
+          cache-to: type=gha,scope=market-amd64,mode=max
