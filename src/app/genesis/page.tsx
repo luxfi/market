@@ -2,7 +2,7 @@
 
 import { formatUnits } from 'viem'
 import { useReadContracts } from 'wagmi'
-import { ArrowRight, ExternalLink } from 'lucide-react'
+import { ArrowRight, ExternalLink } from '@luxfi/ui/icons'
 import { Header } from '@/components/Header'
 import { Card } from '@/components/ui/card'
 import { useChainContext } from '@/hooks/useChain'

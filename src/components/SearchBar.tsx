@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSearchCollections } from '@/hooks/useNFTData'
 import { useChainContext } from '@/hooks/useChain'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { Search } from '@luxfi/ui/icons'
 
 export function SearchBar() {
   const [query, setQuery] = useState('')
