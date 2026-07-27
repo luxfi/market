@@ -24,9 +24,7 @@ export function SearchBar() {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const nftResults = results?.items?.filter(
-    (r: { type: string }) => r.type === 'ERC-721' || r.type === 'ERC-1155'
-  ) ?? []
+  const nftResults = results?.items ?? []
 
   return (
     <div ref={ref} className="relative w-full max-w-[480px]">
@@ -46,7 +44,7 @@ export function SearchBar() {
       </div>
       {isOpen && query.length >= 2 && nftResults.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl p-2 max-h-80 overflow-y-auto z-[200] shadow-xl shadow-black/40">
-          {nftResults.map((item: { address: string; name: string; symbol: string; type: string; icon_url: string | null }) => (
+          {nftResults.map((item) => (
             <Link
               key={item.address}
               href={`/collection/${chainId}/${item.address}`}

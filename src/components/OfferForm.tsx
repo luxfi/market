@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { parseEther, type Address } from 'viem'
 import { useWriteContract, useChainId } from 'wagmi'
-import { CONTRACTS, MARKET_ABI } from '@/lib/contracts'
+import { CONTRACTS, MARKET_ABI, WRAPPED_NATIVE } from '@/lib/contracts'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -18,25 +18,20 @@ export function OfferForm({ contractAddress, tokenId }: OfferFormProps) {
   const chainId = useChainId()
   const { writeContract, isPending } = useWriteContract()
 
-  const contracts = CONTRACTS[chainId]
-  if (!contracts) return null
+  const market = CONTRACTS[chainId]?.market
+  const paymentToken = WRAPPED_NATIVE[chainId]
+  // makeOffer reverts on address(0) — an offer needs an LRC20 to escrow against.
+  if (!market || !paymentToken) return null
 
   const handleOffer = () => {
     if (!amount) return
     const durationSeconds = BigInt(Number(duration) * 86400)
 
     writeContract({
-      address: contracts.markets,
+      address: market,
       abi: MARKET_ABI,
       functionName: 'makeOffer',
-      args: [
-        contractAddress,
-        BigInt(tokenId),
-        '0x0000000000000000000000000000000000000000' as Address,
-        parseEther(amount),
-        durationSeconds,
-      ],
-      value: parseEther(amount),
+      args: [contractAddress, BigInt(tokenId), paymentToken, parseEther(amount), durationSeconds],
     })
   }
 
@@ -45,7 +40,7 @@ export function OfferForm({ contractAddress, tokenId }: OfferFormProps) {
       <h3 className="text-base font-semibold">Make an Offer</h3>
       <div>
         <label className="text-xs text-muted-foreground block mb-1">
-          Offer Amount (LUX)
+          Offer Amount (WLUX)
         </label>
         <Input
           type="number"
