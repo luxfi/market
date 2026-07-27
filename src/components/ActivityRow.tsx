@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { CHAIN_INFO, EXPLORER_API } from '@/lib/chains'
+import { CHAIN_INFO, explorerUrl } from '@/lib/chains'
 import { ExternalLink } from 'lucide-react'
 import type { ExplorerTransfer } from '@/lib/explorer'
 import { shortenAddress } from '@/lib/utils'
@@ -20,9 +20,8 @@ interface ActivityRowProps {
 
 export function ActivityRow({ transfer, chainId }: ActivityRowProps) {
   const chainInfo = CHAIN_INFO[chainId]
-  const apiBase = EXPLORER_API[chainId]
-  const explorerBase = apiBase?.replace('/api/v2', '') ?? 'https://explore.lux.network'
-  const event = getEventType(transfer.method)
+  const explorerBase = explorerUrl(chainId)
+  const event = getEventType(transfer.method ?? '')
   const isMint = transfer.from.hash === '0x0000000000000000000000000000000000000000'
   const tokenId = transfer.total?.token_id ?? '?'
 
@@ -45,7 +44,7 @@ export function ActivityRow({ transfer, chainId }: ActivityRowProps) {
           href={`/nft/${chainId}/${transfer.token.address}/${tokenId}`}
           className="text-foreground no-underline font-medium hover:underline"
         >
-          {transfer.token.name} #{tokenId}
+          {transfer.token.name ?? transfer.token.symbol ?? 'NFT'} #{tokenId}
         </Link>
       </div>
 
@@ -87,7 +86,7 @@ export function ActivityRow({ transfer, chainId }: ActivityRowProps) {
 
       {/* Tx link */}
       <a
-        href={`${explorerBase}/tx/${transfer.tx_hash}`}
+        href={`${explorerBase}/tx/${transfer.transaction_hash}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-muted-foreground shrink-0 hover:text-foreground transition-colors"

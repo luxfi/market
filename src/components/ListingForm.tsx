@@ -19,8 +19,8 @@ export function ListingForm({ contractAddress, tokenId }: ListingFormProps) {
   const { address } = useAccount()
   const { writeContract, isPending } = useWriteContract()
 
-  const contracts = CONTRACTS[chainId]
-  if (!contracts) return null
+  const market = CONTRACTS[chainId]?.market
+  if (!market) return null
 
   const handleApproveAndList = async () => {
     if (!address || !price) return
@@ -30,7 +30,7 @@ export function ListingForm({ contractAddress, tokenId }: ListingFormProps) {
       address: contractAddress,
       abi: ERC721_ABI,
       functionName: 'approve',
-      args: [contracts.markets, BigInt(tokenId)],
+      args: [market, BigInt(tokenId)],
     })
   }
 
@@ -39,7 +39,7 @@ export function ListingForm({ contractAddress, tokenId }: ListingFormProps) {
     const durationSeconds = BigInt(Number(duration) * 86400)
 
     writeContract({
-      address: contracts.markets,
+      address: market,
       abi: MARKET_ABI,
       functionName: 'list',
       args: [
