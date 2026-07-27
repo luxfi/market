@@ -8,7 +8,7 @@ import { usePortfolioNFTs } from '@/hooks/useNFTData'
 import { CHAIN_INFO } from '@/lib/chains'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Wallet } from 'lucide-react'
+import { Wallet } from '@luxfi/ui/icons'
 import { useConnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 
