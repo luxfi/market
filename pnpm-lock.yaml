@@ -15,8 +15,8 @@ importers:
         specifier: ^0.13.8
         version: 0.13.8(react@19.2.8)
       '@luxfi/ui':
-        specifier: 7.4.3
-        version: 7.4.3(36uihmpzruflw4edsap2j7th6a)
+        specifier: 7.4.4
+        version: 7.4.4(36uihmpzruflw4edsap2j7th6a)
       '@radix-ui/react-dialog':
         specifier: ^1.1.0
         version: 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -35,9 +35,6 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
-      lucide-react:
-        specifier: ^1.27.0
-        version: 1.27.0(react@19.2.8)
       next:
         specifier: 15.5.0
         version: 15.5.0(@babel/core@7.29.7)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1476,8 +1473,8 @@ packages:
   '@lit/reactive-element@2.1.2':
     resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
-  '@luxfi/ui@7.4.3':
-    resolution: {integrity: sha512-GeHRaTmKn4Er5bmRwH6m47fUzuHph9cGsrNIOdWKoeX4vgoINQbe9GwLENYxuJTf1/tBG0qn3FIclypmCxxtig==}
+  '@luxfi/ui@7.4.4':
+    resolution: {integrity: sha512-0Cj7sOQHIivEd1/Ypjo9jLnKa8WyjxLgopxCwQQtUObegYSI8F9JSoOCQF7bH9Vg4j8Bj11i2S+QQhCian1lpA==}
     peerDependencies:
       '@hanzo/gui': ^7.3.0
       '@hanzogui/colors': ^7.3.0
@@ -8481,7 +8478,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
 
-  '@luxfi/ui@7.4.3(36uihmpzruflw4edsap2j7th6a)':
+  '@luxfi/ui@7.4.4(36uihmpzruflw4edsap2j7th6a)':
     dependencies:
       '@hanzo/gui': 7.3.0(expo@57.0.8)(react-dom@19.2.8(react@19.2.8))(react-native-web@0.21.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.17)(bufferutil@4.1.0)(react@19.2.8)(utf-8-validate@5.0.10))(react@19.2.8)(sf-symbols-typescript@2.2.0)
       '@hanzogui/config': 7.3.0(expo@57.0.8)(react-dom@19.2.8(react@19.2.8))(react-native-reanimated@4.5.3(react-native-worklets@0.11.3(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.17)(bufferutil@4.1.0)(react@19.2.8)(utf-8-validate@5.0.10))(react@19.2.8))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.17)(bufferutil@4.1.0)(react@19.2.8)(utf-8-validate@5.0.10))(react@19.2.8))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.17)(bufferutil@4.1.0)(react@19.2.8)(utf-8-validate@5.0.10))(react@19.2.8)(sf-symbols-typescript@2.2.0)

@@ -8,7 +8,7 @@ import { useCollections } from '@/hooks/useNFTData'
 import { CHAIN_INFO } from '@/lib/chains'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Search } from 'lucide-react'
+import { Search } from '@luxfi/ui/icons'
 
 export default function CollectionsPage() {
   const { chainId } = useChainContext()

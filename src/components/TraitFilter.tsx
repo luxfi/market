@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import { ChevronUp, ChevronDown } from '@luxfi/ui/icons'
 import { cn } from '@/lib/utils'
 import type { NFTTrait } from '@/lib/explorer'
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { CHAIN_INFO, explorerUrl } from '@/lib/chains'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink } from '@luxfi/ui/icons'
 import type { ExplorerTransfer } from '@/lib/explorer'
 import { shortenAddress } from '@/lib/utils'
 

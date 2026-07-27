@@ -8,7 +8,7 @@ import { useCollections } from '@/hooks/useNFTData'
 import Link from 'next/link'
 import { CHAIN_INFO } from '@/lib/chains'
 import { Card } from '@/components/ui/card'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from '@luxfi/ui/icons'
 
 const GENESIS_TIERS = [
   { name: 'Genesis', locked: '1B LUX', tier: 'Tier 1', multiplier: '10x' },

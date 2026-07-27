@@ -7,7 +7,7 @@ import { injected } from 'wagmi/connectors'
 import { useChainContext } from '@/hooks/useChain'
 import { CHAIN_INFO } from '@/lib/chains'
 import { Button } from '@/components/ui/button'
-import { Wallet, LogOut } from 'lucide-react'
+import { Wallet, LogOut } from '@luxfi/ui/icons'
 import { cn } from '@/lib/utils'
 import { shortenAddress } from '@/lib/utils'
 
