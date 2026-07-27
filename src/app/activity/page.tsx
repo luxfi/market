@@ -3,27 +3,11 @@
 import { Header } from '@/components/Header'
 import { ActivityRow } from '@/components/ActivityRow'
 import { useChainContext } from '@/hooks/useChain'
-import { useQuery } from '@tanstack/react-query'
-import { EXPLORER_API } from '@/lib/chains'
-
-/** Fetch recent NFT transfers across all NFT contracts on the selected chain */
-async function getRecentNftTransfers(chainId: number) {
-  const base = EXPLORER_API[chainId] ?? EXPLORER_API[96369]
-  const res = await fetch(`${base}/token-transfers?type=ERC-721,ERC-1155`, {
-    headers: { Accept: 'application/json' },
-    next: { revalidate: 15 },
-  })
-  if (!res.ok) return { items: [] }
-  return res.json()
-}
+import { useNftActivity } from '@/hooks/useNFTData'
 
 export default function ActivityPage() {
   const { chainId } = useChainContext()
-  const { data, isLoading } = useQuery({
-    queryKey: ['nft', 'activity', chainId],
-    queryFn: () => getRecentNftTransfers(chainId),
-    staleTime: 15_000,
-  })
+  const { data, isLoading } = useNftActivity(chainId)
 
   return (
     <div>
@@ -51,8 +35,12 @@ export default function ActivityPage() {
             No NFT activity found on this chain yet.
           </div>
         ) : (
-          data.items.map((transfer: any, i: number) => (
-            <ActivityRow key={`${transfer.tx_hash}-${i}`} transfer={transfer} chainId={chainId} />
+          data.items.map((transfer, i) => (
+            <ActivityRow
+              key={`${transfer.transaction_hash}-${transfer.block_number}-${i}`}
+              transfer={transfer}
+              chainId={chainId}
+            />
           ))
         )}
       </main>

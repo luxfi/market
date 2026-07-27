@@ -32,7 +32,7 @@ function ChainPortfolio({ chainId, walletAddress }: { chainId: number; walletAdd
             key={`${item.token.address}-${item.token_id}`}
             contractAddress={item.token.address}
             tokenId={item.token_id ?? '0'}
-            collectionName={item.token.name}
+            collectionName={item.token.name ?? undefined}
             chainId={chainId}
             instance={item.token_instance ?? undefined}
           />

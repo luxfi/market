@@ -39,3 +39,4 @@ yarn-error.log*
 # Sentry Auth Token
 .sentryclirc
 CLAUDE.md
+tsconfig.tsbuildinfo
