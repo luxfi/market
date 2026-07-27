@@ -1,111 +1,60 @@
+/*
+ * lux.market rides the canonical Lux token set.
+ *
+ * What it replaced: a hand-rolled shadcn block whose neutrals all carried hue
+ * 240 at up to 10% saturation (--foreground 240 10% 3.9%, --muted 240 3.7%
+ * 15.9%, --ring 240 4.9% 83.9%) — the same cool cast the MPC dashboard had, and
+ * nothing like explore or the bootnode console next to it — plus a literal tan
+ * in BOTH modes: --chart-4 and --warning at hsl(38.3 95.8% 56.7%) = #F9B03D.
+ *
+ * Tokens are hex now, so `hsl(var(--x))` became `var(--x)` and
+ * `hsl(var(--x) / 0.8)` became a color-mix().
+ */
 @import "tailwindcss";
+@import "@luxfi/ui/tokens.css";
+
+:root {
+  /* Radius is the one non-colour value this app owns. */
+  --radius: 0.75rem;
+}
 
 /* Default to dark mode */
 html {
   color-scheme: dark;
 }
 
-/* CSS Variables - Light theme */
-:root {
-  --radius: 0.75rem;
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --chart-1: 142.1 76.2% 36.3%;
-  --chart-2: 217.2 91.2% 59.8%;
-  --chart-3: 316.6 73.3% 69.4%;
-  --chart-4: 38.3 95.8% 56.7%;
-  --chart-5: 0 84.2% 60.2%;
-  --success: 142.1 76.2% 36.3%;
-  --success-foreground: 0 0% 98%;
-  --warning: 38.3 95.8% 56.7%;
-  --warning-foreground: 0 0% 0%;
-  --info: 217.2 91.2% 59.8%;
-  --info-foreground: 0 0% 98%;
-}
-
-/* Dark theme - Primary for Lux apps */
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  --chart-1: 142.1 70.6% 45.3%;
-  --chart-2: 217.2 91.2% 59.8%;
-  --chart-3: 316.6 73.3% 52%;
-  --chart-4: 38.3 95.8% 56.7%;
-  --chart-5: 0 84.2% 60.2%;
-  --success: 142.1 70.6% 45.3%;
-  --success-foreground: 0 0% 98%;
-  --warning: 38.3 95.8% 56.7%;
-  --warning-foreground: 0 0% 0%;
-  --info: 217.2 91.2% 59.8%;
-  --info-foreground: 0 0% 98%;
-}
-
 @theme inline {
   --radius: 0.75rem;
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-success: hsl(var(--success));
-  --color-success-foreground: hsl(var(--success-foreground));
-  --color-warning: hsl(var(--warning));
-  --color-warning-foreground: hsl(var(--warning-foreground));
-  --color-info: hsl(var(--info));
-  --color-info-foreground: hsl(var(--info-foreground));
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
   --font-sans: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
   --font-mono: var(--font-mono, ui-monospace, monospace);
@@ -124,7 +73,7 @@ html {
 }
 
 * {
-  border-color: hsl(var(--border));
+  border-color: var(--border);
 }
 
 html {
@@ -133,13 +82,13 @@ html {
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--background);
+  color: var(--foreground);
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
 .glass {
-  background-color: hsl(var(--background) / 0.8);
+  background-color: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(24px);
 }
 
@@ -174,5 +123,5 @@ body {
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--muted-foreground) 50%, transparent); }
