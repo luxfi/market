@@ -1,6 +1,12 @@
 import path from 'path'
 import type { NextConfig } from 'next'
+import { withLuxUi } from '@luxfi/ui/next'
 
+// `withLuxUi` is the ONE place the gui engine's bundler wiring lives — transpile
+// list, react-native → react-native-web alias in both bundlers, platform
+// defines. Every Next surface needed the identical incantation; the ones that
+// hand-rolled it each transpiled a different subset, which is how one app
+// renders a Sheet and the next throws on the same component.
 const nextConfig: NextConfig = {
   output: 'export',
   outputFileTracingRoot: path.resolve(import.meta.dirname ?? __dirname),
@@ -24,4 +30,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withLuxUi(nextConfig as never) as NextConfig
