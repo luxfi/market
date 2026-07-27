@@ -26,6 +26,32 @@ export const WRAPPED_NATIVE: Record<number, `0x${string}`> = {
   96369: '0x4888E4a2Ee0F03051c72D2BD3ACf755eD3498B3E',
 }
 
+/**
+ * Genesis NFT collection per chain — standard/contracts/nft/GenesisNFTs.sol.
+ *
+ * Unlike CONTRACTS above, an address here does not enable a transaction; it
+ * only tells /genesis where to probe. The probe is the point: this address is
+ * where the indexer recorded 118 mints on 2026-07-09 (block 1085879), but it
+ * has NO CODE at head. Measured against https://api.lux.network/v1/bc/C/rpc at
+ * block 1098191, with WLUX 0x4888e4a2.. as the positive control:
+ *
+ *   0x004287c4..76c6  eth_getCode -> "0x"   totalSupply() -> "0x" (revert)
+ *   0x4888e4a2..8b3e  eth_getCode -> 3462   totalSupply() -> 159126795.518e18
+ *
+ * So /genesis reads totalMinted()/totalLuxLocked() live and reports the read as
+ * unavailable when it reverts, instead of printing the tier table that used to
+ * be hard-coded into the page.
+ */
+export const GENESIS_NFT: Record<number, `0x${string}`> = {
+  96369: '0x004287c47efc912fec391979154454a8017a76c6',
+}
+
+/** GenesisNFTs.sol reads: totalMinted():829, totalLuxLocked():214 (public state). */
+export const GENESIS_ABI = [
+  { type: 'function', name: 'totalMinted', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'totalLuxLocked', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
+] as const
+
 export const ERC721_ABI = [
   { type: 'function', name: 'balanceOf', stateMutability: 'view', inputs: [{ name: 'owner', type: 'address' }], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'ownerOf', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'address' }] },
