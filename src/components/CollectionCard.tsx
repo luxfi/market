@@ -42,7 +42,7 @@ export function CollectionCard({ token, chainId, rank }: CollectionCardProps) {
           <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
             <span>{token.type}</span>
             {chainInfo && (
-              <span style={{ color: chainInfo.color }}>{chainInfo.name}</span>
+              <span className="text-foreground">{chainInfo.name}</span>
             )}
           </div>
         </div>
