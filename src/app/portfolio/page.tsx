@@ -23,7 +23,7 @@ function ChainPortfolio({ chainId, walletAddress }: { chainId: number; walletAdd
 
   return (
     <section className="mb-8">
-      <h3 className="text-base font-semibold mb-3" style={{ color: chainInfo?.color }}>
+      <h3 className="text-base font-semibold mb-3 text-foreground">
         {chainInfo?.name} ({data.items.length})
       </h3>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
