@@ -14,7 +14,7 @@
   "dependencies": {
     "@hanzo/gui": "^7.3.0",
     "@hanzo/iam": "^0.13.8",
-    "@luxfi/ui": "7.4.4",
+    "@luxfi/ui": "7.4.7",
     "@radix-ui/react-dialog": "^1.1.0",
     "@radix-ui/react-dropdown-menu": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
