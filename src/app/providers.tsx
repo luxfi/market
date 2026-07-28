@@ -1,8 +1,7 @@
 'use client'
 
-import { configureIam, logout, startLogin } from '@hanzo/iam/browser'
-import { AppProvider, IdentityProvider } from '@luxfi/ui'
-import { resolveWhiteLabel } from '@luxfi/ui/white-label'
+import { AppProvider } from '@luxfi/ui'
+import { AuthProvider } from '@luxfi/ui/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { useEffect, useState, type ReactNode } from 'react'
 import { WagmiProvider, createConfig, http } from 'wagmi'
@@ -18,8 +17,11 @@ import { supportedChains } from '@/lib/chains'
 // The market had only the first, so its header was a Connect button and there
 // was no way to tell lux.market from zoo.market except the copy. `AppProvider`
 // carries the white-label (brand, gui theme, OIDC issuer, IAM client — all from
-// the Host header) and `IdentityProvider` the account, exactly as every other
-// Lux surface does. Wallet state stays where it was.
+// the Host header) and `AuthProvider` the account — the identity read AND the
+// PKCE login, in ONE component, exactly as every other Lux surface does. This
+// file used to repeat `configureIam` + `startLogin` + `logout` verbatim from
+// lux/mpc/dashboard; that flow now lives in @luxfi/ui/auth. Wallet state stays
+// where it was.
 
 function createWagmiConfig() {
   return createConfig({
@@ -47,26 +49,18 @@ export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
     const real = window.location.host
     const local = /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(real)
-    const resolved = local && DEV_HOST ? DEV_HOST : real
-    setHost(resolved)
-    const wl = resolveWhiteLabel(resolved)
-    configureIam({ issuer: wl.issuer, clientId: wl.clientId })
+    setHost(local && DEV_HOST ? DEV_HOST : real)
   }, [])
 
   return (
     <AppProvider host={host} queryClient={queryClient}>
-      <IdentityProvider
-        auth={{
-          signIn: () => void startLogin({ redirect: '/' }),
-          signOut: () => void logout(),
-        }}
-      >
+      <AuthProvider redirect="/">
         <WagmiProvider config={config}>
           <ChainContext.Provider value={{ chainId, setChainId }}>
             {children}
           </ChainContext.Provider>
         </WagmiProvider>
-      </IdentityProvider>
+      </AuthProvider>
     </AppProvider>
   )
 }
