@@ -5,22 +5,50 @@ on:
   push:
     tags: ['v*']
 
-# NOTE: do NOT add a top-level `permissions:` block. Combined with
-# `secrets: inherit` on a `uses:` it triggers a silent startup_failure on the
-# reusable workflow — every 0s "workflow file issue" failure on this file was
-# that. The reusable's job-level permissions are sufficient.
+# Self-contained on purpose, and this is the ONE place it is.
+#
+# Every previous revision of this file called a reusable workflow —
+# hanzoai/.github, then luxfi/.github — and every run died at 0s with
+# "This run likely failed because of a workflow file issue", no jobs created.
+# The cause is not the YAML: luxfi/market is a PUBLIC repository and both
+# .github repos are PRIVATE, and GitHub refuses to resolve a private reusable
+# workflow for a public caller, failing the run at startup. Positive control:
+# luxfi/finance is private and its identical call starts normally.
+#
+# workflow_dispatch cannot be used to test this — the API answers
+# 422 "Actions has been disabled for this user" — so a tag push is the trigger.
+#
+# Runner: the luxfi ARC scale set registers its SET NAME as the runs-on label.
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  docker:
-    uses: luxfi/.github/.github/workflows/docker.yml@main
-    with:
-      image: ghcr.io/luxfi/market
-      platforms: linux/amd64
-      # ARC scale-set targeting: jobs must use the scale-set NAME as the
-      # runs-on label (githubConfigUrl=github.com/luxfi, set name=lux-build).
-      # fromJson() in the reusable decodes this string to a scalar label.
-      # hanzoai-org scale-sets are not visible from luxfi, so the
-      # ["self-hosted","linux","amd64"] label array never matched a runner.
-      runner-amd64: '"lux-build"'
-      runner-deploy: '"lux-build"'
-    secrets: inherit
+  build:
+    runs-on: lux-build
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Version from the tag
+        id: v
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/luxfi/market:${{ steps.v.outputs.version }}
+            ghcr.io/luxfi/market:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
