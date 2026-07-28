@@ -1,20 +1,26 @@
-name: Docker
+name: Docker Build
+
 on:
   workflow_dispatch:
   push:
-    branches: [main, dev, test]
     tags: ['v*']
 
-permissions:
-  contents: read
-  packages: write
+# NOTE: do NOT add a top-level `permissions:` block. Combined with
+# `secrets: inherit` on a `uses:` it triggers a silent startup_failure on the
+# reusable workflow — every 0s "workflow file issue" failure on this file was
+# that. The reusable's job-level permissions are sufficient.
 
 jobs:
   docker:
-    uses: hanzoai/.github/.github/workflows/docker-build.yml@main
+    uses: luxfi/.github/.github/workflows/docker.yml@main
     with:
       image: ghcr.io/luxfi/market
-      runner-amd64: '["self-hosted","linux","amd64"]'
-      runner-arm64: '["self-hosted","linux","arm64"]'
-      runner-deploy: '["self-hosted","linux","amd64"]'
+      platforms: linux/amd64
+      # ARC scale-set targeting: jobs must use the scale-set NAME as the
+      # runs-on label (githubConfigUrl=github.com/luxfi, set name=lux-build).
+      # fromJson() in the reusable decodes this string to a scalar label.
+      # hanzoai-org scale-sets are not visible from luxfi, so the
+      # ["self-hosted","linux","amd64"] label array never matched a runner.
+      runner-amd64: '"lux-build"'
+      runner-deploy: '"lux-build"'
     secrets: inherit

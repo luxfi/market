@@ -1,5 +1,13 @@
+// Plain ESM, not TypeScript, on purpose.
+//
+// Next 15's `next.config.ts` loader calls `ts.sys.fileExists` / `ts.findConfigFile`
+// off the app's own `typescript`. This repo is on TypeScript 7 (native preview),
+// whose module exports neither, so booting died before the first request with
+// `TypeError: Cannot read properties of undefined (reading 'fileExists')` and
+// `Failed to load next.config.ts`. A config file gains nothing from types it
+// only uses to annotate one object literal.
+
 import path from 'path'
-import type { NextConfig } from 'next'
 import { withLuxUi } from '@luxfi/ui/next'
 
 // `withLuxUi` is the ONE place the gui engine's bundler wiring lives — transpile
@@ -7,7 +15,7 @@ import { withLuxUi } from '@luxfi/ui/next'
 // defines. Every Next surface needed the identical incantation; the ones that
 // hand-rolled it each transpiled a different subset, which is how one app
 // renders a Sheet and the next throws on the same component.
-const nextConfig: NextConfig = {
+const nextConfig = {
   output: 'export',
   outputFileTracingRoot: path.resolve(import.meta.dirname ?? __dirname),
   reactStrictMode: true,
@@ -30,4 +38,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withLuxUi(nextConfig as never) as NextConfig
+export default withLuxUi(nextConfig)
