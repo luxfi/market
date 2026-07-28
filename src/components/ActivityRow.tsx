@@ -71,10 +71,7 @@ export function ActivityRow({ transfer, chainId }: ActivityRowProps) {
 
       {/* Chain */}
       {chainInfo && (
-        <div
-          className="text-[11px] font-semibold w-10 text-right shrink-0"
-          style={{ color: chainInfo.color }}
-        >
+        <div className="text-[11px] font-semibold w-10 text-right shrink-0">
           {chainInfo.name}
         </div>
       )}

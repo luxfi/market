@@ -48,8 +48,7 @@ export function NFTCard({ contractAddress, tokenId, name, imageUrl, collectionNa
           {/* Chain badge */}
           {chainInfo && (
             <div
-              className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[10px] font-semibold"
-              style={{ color: chainInfo.color }}
+              className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-foreground/70 text-background backdrop-blur-sm text-[10px] font-semibold"
             >
               {chainInfo.name}
             </div>

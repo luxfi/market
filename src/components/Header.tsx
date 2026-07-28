@@ -45,9 +45,8 @@ function ChainSelector() {
             title={info.name}
             className={cn(
               'cursor-pointer rounded-md border-none px-2.5 py-1.5 text-xs font-semibold transition-colors',
-              isActive ? 'text-black' : 'bg-transparent text-muted-foreground hover:text-foreground',
+              isActive ? 'bg-primary text-primary-foreground' : 'bg-transparent text-muted-foreground hover:text-foreground',
             )}
-            style={isActive ? { background: info.color } : undefined}
           >
             {info.name}
           </button>

@@ -71,7 +71,7 @@ export default function Home() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">
               Collections on{' '}
-              <span style={{ color: chainInfo?.color }}>{chainInfo?.name ?? 'Lux'}</span>
+              <span className="text-foreground">{chainInfo?.name ?? 'Lux'}</span>
             </h2>
             <Link
               href="/collections"

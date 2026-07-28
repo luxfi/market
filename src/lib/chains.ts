@@ -68,10 +68,22 @@ export function explorerUrl(chainId: number): string {
   return chain?.blockExplorers?.default.url ?? luxMainnet.blockExplorers!.default.url
 }
 
-export const CHAIN_INFO: Record<number, { name: string; symbol: string; color: string }> = {
-  [luxMainnet.id]: { name: 'Lux', symbol: 'LUX', color: '#55ccff' },
-  [zooMainnet.id]: { name: 'Zoo', symbol: 'ZOO', color: '#7ee787' },
-  [hanzoMainnet.id]: { name: 'Hanzo', symbol: 'HANZO', color: '#d2a8ff' },
-  [spcMainnet.id]: { name: 'SPC', symbol: 'SPC', color: '#ffa657' },
-  [parsMainnet.id]: { name: 'Pars', symbol: 'PARS', color: '#ff7b72' },
+/**
+ * A chain is a NAME and a SYMBOL. It used to carry a `color` too — five hexes
+ * lifted wholesale from GitHub's dark-syntax palette (#7ee787 entity-green,
+ * #d2a8ff entity, #ffa657 variable — a literal tan, #ff7b72 keyword) plus a
+ * cyan #55ccff for Lux itself, painted as inline `style={{ color }}` on a
+ * surface whose every other pixel is achromatic.
+ *
+ * Deleted rather than re-tokenised: the field existed to make five chains
+ * distinguishable, and the chain NAME already does that. Monochrome carries
+ * state by weight and label, never by hue — and an inline hex is unreachable
+ * by white-label-by-hostname no matter what value it holds.
+ */
+export const CHAIN_INFO: Record<number, { name: string; symbol: string }> = {
+  [luxMainnet.id]: { name: 'Lux', symbol: 'LUX' },
+  [zooMainnet.id]: { name: 'Zoo', symbol: 'ZOO' },
+  [hanzoMainnet.id]: { name: 'Hanzo', symbol: 'HANZO' },
+  [spcMainnet.id]: { name: 'SPC', symbol: 'SPC' },
+  [parsMainnet.id]: { name: 'Pars', symbol: 'PARS' },
 }

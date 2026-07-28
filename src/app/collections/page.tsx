@@ -25,7 +25,7 @@ export default function CollectionsPage() {
         </div>
         <p className="text-muted-foreground mb-6 text-sm">
           Browse NFT collections on{' '}
-          <span className="font-semibold" style={{ color: chainInfo?.color }}>{chainInfo?.name ?? 'Lux'}</span>.
+          <span className="font-semibold text-foreground">{chainInfo?.name ?? 'Lux'}</span>.
           Collections with LSSVM pools have instant buy/sell liquidity.
         </p>
 
