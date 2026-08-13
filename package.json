@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hanzo/event": "^0.3.21",
     "@hanzo/gui": "^7.3.0",
     "@hanzo/iam": "^0.13.8",
     "@luxfi/ui": "7.4.10",
