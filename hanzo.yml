@@ -1,0 +1,17 @@
+# Native CI for luxfi/market, on the git.hanzo.ai runner fleet.
+#
+# Test-only: the image is built by .github/workflows/docker.yml on lux-build
+# and by release-matrix.yml on the luxfi-* pools. Declaring images: here would
+# make a second builder for the same image, so it does not.
+test:
+  - name: typecheck
+    # The install is --no-frozen-lockfile because that is the only install this
+    # repo has: the Dockerfile uses it too, and --frozen-lockfile fails on main
+    # today — package.json asks for @hanzo/event ^0.3.21 and pnpm-lock.yaml has
+    # never heard of it. Worth repairing; until it is, a gate demanding a frozen
+    # lockfile would be red on arrival and would say nothing about this code.
+    # Measured: install 14s, tsc --noEmit clean.
+    run: |
+      set -e
+      pnpm install --no-frozen-lockfile
+      pnpm typecheck
