@@ -39,7 +39,35 @@ export type Transfer = {
   from: string
   to: string
   token: { address: string; type: string }
+  /**
+   * The item that moved, when the indexer names it.
+   *
+   * It does not today: every ERC-721 row arrives with the ERC-20 shape and no
+   * id, which is why `lib/logs.ts` reads the id back from the chain. The field
+   * is read here rather than assumed absent, so the day the indexer writes
+   * topics[3] the chain read stops happening on its own.
+   */
+  id: string | null
 }
+
+/**
+ * One item, as the indexer would describe it.
+ *
+ * `/tokens/{addr}/instances` answers 200 and empty for every collection on
+ * every chain — the route is served by the standalone explorer's empty-list
+ * handler, so this is a resource that exists and holds nothing rather than one
+ * that is missing. Reading it costs one request and is the difference between
+ * a whole item list and the partial one a bounded log scan can recover.
+ */
+export type Instance = {
+  id: string
+  owner: string | null
+  name: string | null
+  image: string | null
+}
+
+/** Instances, and whether the indexer served all of them. See `Holders`. */
+export type Instances = { list: Instance[]; whole: boolean }
 
 export type Holding = {
   token: Token
@@ -108,6 +136,13 @@ const token = (t: RawToken): Token => ({
   icon: t.icon_url,
 })
 
+/**
+ * The indexer declares the item id in two places on a transfer — `token_id` on
+ * the row and `token_id` inside `total`, the object that otherwise carries a
+ * fungible amount. Neither is populated today. Both are read, in that order,
+ * the same way the indexer itself falls through column spellings: a reader that
+ * accepts one shape is a reader that breaks on the other.
+ */
 type RawTransfer = {
   block_number: number
   log_index: number
@@ -116,6 +151,8 @@ type RawTransfer = {
   from: { hash: string }
   to: { hash: string }
   token: { address_hash: string; type: string }
+  token_id?: string | null
+  total?: { token_id?: string | null } | null
 }
 
 const transfer = (t: RawTransfer): Transfer => ({
@@ -126,6 +163,7 @@ const transfer = (t: RawTransfer): Transfer => ({
   from: t.from.hash,
   to: t.to.hash,
   token: { address: t.token.address_hash.toLowerCase(), type: t.token.type },
+  id: id(t.token_id ?? t.total?.token_id ?? null),
 })
 
 /** A 32-byte hex token id as the decimal a person reads. */
@@ -203,6 +241,33 @@ export async function holders(chain: Chain, address: string): Promise<Holders> {
 
 /** Rows the indexer serves in one page. A full page may not be the whole set. */
 const PAGE = 50
+
+/**
+ * The items in a collection, as the indexer records them.
+ *
+ * Empty on every collection today, including the 149-token one, so a caller
+ * gets an empty list rather than an error and has to decide what that means:
+ * the collection page falls back to reading ids out of the chain's own logs and
+ * says which of the two it drew.
+ */
+export async function instances(chain: Chain, address: string): Promise<Instances> {
+  const page = await read<Page<RawInstance>>(chain, `/tokens/${address}/instances`)
+  return { list: page.items.map(instance), whole: page.items.length < PAGE }
+}
+
+type RawInstance = {
+  id: string
+  owner?: { hash: string } | null
+  image_url?: string | null
+  metadata?: { name?: string; image?: string } | null
+}
+
+const instance = (i: RawInstance): Instance => ({
+  id: id(i.id) ?? i.id,
+  owner: i.owner?.hash.toLowerCase() ?? null,
+  name: i.metadata?.name ?? null,
+  image: i.image_url ?? i.metadata?.image ?? null,
+})
 
 export async function transfers(chain: Chain, address: string): Promise<Transfer[]> {
   const page = await read<Page<RawTransfer>>(chain, `/tokens/${address}/transfers`)

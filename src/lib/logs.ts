@@ -27,7 +27,14 @@ const TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523
 const WINDOW = 1024
 const REQUESTS = 8
 
-export type Row = { block: number; logIndex: number; token: { address: string; type: string } }
+/** A transfer row, narrowed to what naming its item needs. */
+export type Row = {
+  block: number
+  logIndex: number
+  token: { address: string; type: string }
+  /** The id the indexer gave, when it gave one. */
+  id: string | null
+}
 
 const key = (block: number, logIndex: number) => `${block}:${logIndex}`
 
@@ -83,6 +90,10 @@ export async function transferIds(chain: Chain, rows: Row[]): Promise<Map<string
 
   const byContract = new Map<string, number[]>()
   for (const r of rows) {
+    // Rows the indexer already named cost nothing to skip and everything to
+    // re-read: when it names all of them this loop leaves `asks` empty, no
+    // request is made, and the fallback has retired itself.
+    if (r.id !== null) continue
     if (r.token.type !== 'ERC-721') continue
     const blocks = byContract.get(r.token.address) ?? []
     blocks.push(r.block)
@@ -110,4 +121,12 @@ export async function transferIds(chain: Chain, rows: Row[]): Promise<Map<string
   return found
 }
 
-export const idFor = (ids: Map<string, string>, row: Row) => ids.get(key(row.block, row.logIndex))
+/**
+ * The item a row moved, or undefined when neither source names it.
+ *
+ * ONE function answers this for every screen, and it asks the indexer first.
+ * The log read exists because the indexer drops the field; it is the fallback,
+ * not the source, and nothing above this line needs to know which one answered.
+ */
+export const idFor = (ids: Map<string, string>, row: Row) =>
+  row.id ?? ids.get(key(row.block, row.logIndex))

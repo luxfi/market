@@ -21,6 +21,9 @@ import type { Chain } from '@/lib/registry'
 // eth_getLogs on the Transfer topic returns it in topics[3], and the indexer's
 // log_index is the EVM log index, so a row joins its log exactly. Rows whose
 // log fell outside the read say so rather than printing a question mark.
+//
+// `idFor` asks the indexer's own field before any of that, so this screen needs
+// no change when the field is filled — the log read just stops happening.
 
 function Feed({ chain }: { chain: Chain }) {
   const activity = useActivity(chain)
@@ -47,7 +50,7 @@ function Feed({ chain }: { chain: Chain }) {
       </Card>
     )
 
-  const unread = ids.data
+  const unnamed = ids.data
     ? activity.data.filter((t) => idFor(ids.data, t) === undefined).length
     : activity.data.length
 
@@ -71,11 +74,12 @@ function Feed({ chain }: { chain: Chain }) {
         />
       ))}
 
-      {unread > 0 ? (
+      {unnamed > 0 ? (
         <p className="mt-4 max-w-[76ch] text-[13px] leading-relaxed text-muted-foreground">
-          {unread} of {activity.data.length} rows show no item id. The indexer does not keep one, so
-          each id is read back from the chain&rsquo;s Transfer logs, and that read is bounded — rows
-          whose block fell outside it are left unnamed rather than guessed at.
+          {unnamed} of {activity.data.length} rows name no item. Neither source answered for them:
+          the indexer records no id on a transfer, and the read that recovers ids from the
+          chain&rsquo;s own Transfer logs is bounded, so rows whose block fell outside it stay
+          unnamed rather than guessed at.
         </p>
       ) : null}
     </>
