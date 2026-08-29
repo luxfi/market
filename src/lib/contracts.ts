@@ -75,6 +75,14 @@ export const INTERFACE = {
 export const ONE = 10n ** 18n
 
 /**
+ * The quote for one whole token, as a percentage. Basis points are integers on
+ * chain, so this rounds off the float that dividing by 1e18 introduces —
+ * 250 bps came back as 2.4999999999999996 before.
+ */
+export const rateLabel = (quoted: bigint) =>
+  `${Number((quoted * 10_000n) / ONE) / 100}%`
+
+/**
  * GenesisNFTs.sol keeps a record per token — `mapping(uint256 => TokenMeta)
  * public tokenMeta` — and its generated getter answers on chain today. It is
  * the only per-item metadata that exists anywhere on Lux: the indexer holds
