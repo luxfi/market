@@ -15,6 +15,7 @@ import {
   GENESIS_ABI,
   GENESIS_TOKEN_ABI,
   ONE,
+  rateLabel,
 } from '@/lib/contracts'
 import * as links from '@/lib/links'
 import { addressUrl, type Chain } from '@/lib/registry'
@@ -72,7 +73,7 @@ function Collection({ chain, address }: { chain: Chain; address: `0x${string}` }
         />
         <Stat
           label="Royalty"
-          value={rate ? `${Number(formatUnits(rate[1], 18)) * 100}%` : null}
+          value={rate ? rateLabel(rate[1]) : null}
           note="declared through ERC-2981"
         />
         <Stat
@@ -90,8 +91,7 @@ function Collection({ chain, address }: { chain: Chain; address: `0x${string}` }
           Mini, 1M for Nano, and each token below reports its own.
         </p>
         <p className="text-muted-foreground">
-          The collection declares a {rate ? `${Number(formatUnits(rate[1], 18)) * 100}%` : ''}{' '}
-          royalty through ERC-2981, which a marketplace has to read and honour. There is no
+          The collection declares a {rate ? rateLabel(rate[1]) : ''} royalty through ERC-2981, which a marketplace has to read and honour. There is no
           marketplace contract on any Lux chain to read it, and this collection&rsquo;s own{' '}
           <code className="font-mono text-xs">market</code> address is zero.
         </p>
