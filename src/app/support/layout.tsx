@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { here } from '@/lib/links'
 import { cn } from '@/lib/utils'
 
 const PAGES = [
@@ -31,7 +32,7 @@ export default function SupportLayout({ children }: { children: ReactNode }) {
               href={p.href}
               className={cn(
                 'no-underline transition-colors hover:text-foreground',
-                pathname === p.href ? 'font-semibold text-foreground' : 'text-muted-foreground',
+                here(pathname, p.href) ? 'font-semibold text-foreground' : 'text-muted-foreground',
               )}
             >
               {p.label}

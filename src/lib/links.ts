@@ -12,3 +12,18 @@ export const collection = (chain: Chain, address: string) =>
 
 export const item = (chain: Chain, address: string, id: string) =>
   `/item?chain=${chain.slug}&address=${address}&id=${id}`
+
+/**
+ * Is `href` the page being read?
+ *
+ * `trailingSlash` makes the router report `/support/` for a link written
+ * `/support`, so comparing the raw strings matched nothing and every nav item
+ * read inactive. Both sides lose the trailing slash first.
+ *
+ * The match is exact, not by prefix. Every link in both navs is a leaf, and a
+ * prefix match lights the wrong ones: `/support` under `/support/projects`, and
+ * `/launch` under `/launches`.
+ */
+export const here = (pathname: string, href: string) => trim(pathname) === trim(href)
+
+const trim = (v: string) => (v.length > 1 && v.endsWith('/') ? v.slice(0, -1) : v)
