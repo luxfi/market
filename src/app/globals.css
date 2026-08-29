@@ -18,6 +18,25 @@
   --radius: 0.75rem;
 }
 
+/*
+ * ONE VARIABLE NAME, TWO SYSTEMS, AND THE PAGE GROUND CAME FROM THE WRONG ONE.
+ *
+ * The gui engine writes its own tokens at runtime — `:root.t_dark { --color: …;
+ * --background: … }` plus `body { background: var(--background); color:
+ * var(--color) }` inside a prefers-color-scheme block. `--background` is a name
+ * both it and the Lux token set use, for different things, and the injected
+ * rule is both later in the cascade and more specific, so `bg-background`
+ * resolved to hsla(0,0%,97%,1) on a page whose cards were #0A0A0A. Card text
+ * measured 1.03:1 against its own card. AA wants 4.5:1.
+ *
+ * The fix reads the ground from the name only the Lux token set defines.
+ * `--color-bg-body` is that file's own semantic for the page ground and tracks
+ * exactly the same rungs `--background` does — n-0 in light, n-1000 in dark —
+ * so this is a rename at the point of use, not a second opinion about the
+ * colour. Every other token (card, muted, border, primary …) is uncontested
+ * and still comes straight from @luxfi/ui/tokens.css.
+ */
+
 /* Default to dark mode */
 html {
   color-scheme: dark;
@@ -25,7 +44,7 @@ html {
 
 @theme inline {
   --radius: 0.75rem;
-  --color-background: var(--background);
+  --color-background: var(--color-bg-body);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -81,14 +100,14 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
-body {
-  background-color: var(--background);
+:root body {
+  background-color: var(--color-bg-body);
   color: var(--foreground);
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
 .glass {
-  background-color: color-mix(in srgb, var(--background) 80%, transparent);
+  background-color: color-mix(in srgb, var(--color-bg-body) 80%, transparent);
   backdrop-filter: blur(24px);
 }
 
