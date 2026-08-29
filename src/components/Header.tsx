@@ -1,62 +1,55 @@
 'use client'
 
 import { AppNav } from '@luxfi/ui'
+import { LogOut, Wallet } from '@luxfi/ui/icons'
 import { usePathname } from 'next/navigation'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
-import { useChainContext } from '@/hooks/useChain'
-import { CHAIN_INFO } from '@/lib/chains'
 import { Button } from '@/components/ui/button'
-import { Wallet, LogOut } from '@luxfi/ui/icons'
-import { cn } from '@/lib/utils'
-import { shortenAddress } from '@/lib/utils'
+import { useChain } from '@/hooks/chain'
+import { cn, shortenAddress } from '@/lib/utils'
 
 // The chrome is `AppNav` from @luxfi/ui — brand, org switcher, links, settings
-// and the user menu, identical to every other Lux surface. What used to be here
-// was a second header: its own sticky bar, its own link styling, a `flex` nav
-// with no phone presentation at all, and a wallet control standing in for an
-// account menu it did not have.
-//
-// The chain selector and the wallet button stay, in the nav's free slot: they
-// are this surface's own controls, not chrome. A wallet is not an account.
+// and the user menu, identical to every other Lux surface. The chain selector
+// and the wallet button sit in its free slot: they are this surface's own
+// controls, not chrome. A wallet is not an account.
 
-const NAV_LINKS = [
-  { href: '/', label: 'Explore' },
+const LINKS = [
   { href: '/collections', label: 'Collections' },
   { href: '/activity', label: 'Activity' },
+  { href: '/pools', label: 'Pools' },
   { href: '/genesis', label: 'Genesis' },
+  { href: '/launches', label: 'Launches' },
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/launch', label: 'Apply' },
 ]
 
-const CHAIN_IDS = [96369, 200200, 36963, 36911, 494949]
-
-/** Which chain the marketplace reads — a market control, not chrome. */
+/** Which chain the screens read. The list is the registry's, never a constant. */
 function ChainSelector() {
-  const { chainId, setChainId } = useChainContext()
+  const state = useChain()
+  if (state.status !== 'ready') return null
   return (
     <div className="hidden gap-0.5 rounded-lg bg-card p-0.5 sm:flex">
-      {CHAIN_IDS.map((id) => {
-        const info = CHAIN_INFO[id]
-        const isActive = chainId === id
-        return (
-          <button
-            key={id}
-            onClick={() => setChainId(id)}
-            title={info.name}
-            className={cn(
-              'cursor-pointer rounded-md border-none px-2.5 py-1.5 text-xs font-semibold transition-colors',
-              isActive ? 'bg-primary text-primary-foreground' : 'bg-transparent text-muted-foreground hover:text-foreground',
-            )}
-          >
-            {info.name}
-          </button>
-        )
-      })}
+      {state.chains.map((c) => (
+        <button
+          key={c.slug}
+          onClick={() => state.select(c.slug)}
+          title={c.name}
+          className={cn(
+            'cursor-pointer rounded-md border-none px-2.5 py-1.5 text-xs font-semibold transition-colors',
+            c.slug === state.chain.slug
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-transparent text-muted-foreground hover:text-foreground',
+          )}
+        >
+          {c.coin}
+        </button>
+      ))}
     </div>
   )
 }
 
-/** The wallet that signs listings — distinct from the IAM account above it. */
+/** The wallet that signs, distinct from the IAM account in the menu above it. */
 function WalletButton() {
   const { address, isConnected } = useAccount()
   const { connect } = useConnect()
@@ -84,16 +77,15 @@ function WalletButton() {
 
 export function Header() {
   const pathname = usePathname()
+  const state = useChain()
   return (
     <AppNav
       brand="Lux Market"
-      links={NAV_LINKS.map((l) => ({
-        ...l,
-        active: l.href === '/' ? pathname === '/' : pathname.startsWith(l.href),
-      }))}
+      links={LINKS.map((l) => ({ ...l, active: pathname.startsWith(l.href) }))}
     >
       <ChainSelector />
-      <WalletButton />
+      {/* wagmi mounts only once the registry has named the chains it can reach. */}
+      {state.status === 'ready' ? <WalletButton /> : null}
     </AppNav>
   )
 }

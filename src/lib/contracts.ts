@@ -1,107 +1,111 @@
-// Marketplace wiring. ABIs mirror the real source in
-// ~/work/lux/standard/contracts/nft/Market.sol (IMarket) — do not invent entries.
+// Contracts this app reads. Every address and every function below answers on
+// chain today; nothing here describes a deployment that does not exist.
+//
+// What used to be here and is gone: a marketplace address map, the IMarket ABI
+// for list/buy/makeOffer, and an LSSVM pair ABI. Market.sol lives in
+// ~/work/lux/standard/contracts/nft/Market.sol and is deployed on no Lux chain
+// — eth_getCode returns 0x at every address the old deployments file recorded,
+// and the current generated Addresses.sol dropped them because its generator
+// verifies code before emitting a constant. A listing form against a contract
+// that cannot settle is a button that lies, so there is no listing form and
+// there is no ABI for one. Both come back the day an address does.
 
 /**
- * Per-chain marketplace addresses.
+ * Lux Genesis, the only collectible NFT contract on any Lux chain.
  *
- * EMPTY ON PURPOSE: `Market.sol` is not deployed on any Lux chain today. The
- * address recorded for lux-mainnet in
- * standard/contracts/deployments/addresses.json (markets/Markets
- * 0xefba7dbf4b9e2855b84f410f61b15975629cdb38) returns `0x` from eth_getCode on
- * 96369 — it was wiped by the 2026-07-10 fresh genesis and never redeployed.
- * ListingForm / OfferForm read this map and render nothing while it is empty,
- * which is the correct behaviour: no listing can be signed against a contract
- * that does not exist. Add an entry only after verifying code at the address.
+ * Measured on 96369 at https://api.lux.network/v1/bc/C/rpc: 21121 bytes of
+ * code, name() "Lux Genesis", symbol() "GENESIS", totalSupply() 3,
+ * supportsInterface(0x80ac58cd) and (0x2a55205a) both true.
+ *
+ * This replaces 0x004287c4..76c6, which the app probed for a year and which
+ * has no code at all. The indexer's own search finds the live one:
+ * /v1/indexer/cchain/search?q=genesis.
  */
-export const CONTRACTS: Record<number, { market?: `0x${string}`; router?: `0x${string}` }> = {}
-
-/**
- * Wrapped native token per chain. `Market.makeOffer` rejects address(0)
- * (`if (paymentToken == address(0)) revert InvalidPrice()` — Market.sol:418),
- * so offers must be denominated in an LRC20. Only entries verified on-chain
- * belong here: WLUX below returns 1730 bytes of code / symbol "WLUX" /
- * decimals 18 on 96369.
- */
-export const WRAPPED_NATIVE: Record<number, `0x${string}`> = {
-  96369: '0x4888E4a2Ee0F03051c72D2BD3ACf755eD3498B3E',
+export const GENESIS: Record<number, `0x${string}`> = {
+  96369: '0x9e04fc57c20b2ee45627c4aa280eb471f2ca6ea5',
 }
 
 /**
- * Genesis NFT collection per chain — standard/contracts/nft/GenesisNFTs.sol.
- *
- * Unlike CONTRACTS above, an address here does not enable a transaction; it
- * only tells /genesis where to probe. The probe is the point: this address is
- * where the indexer recorded 118 mints on 2026-07-09 (block 1085879), but it
- * has NO CODE at head. Measured against https://api.lux.network/v1/bc/C/rpc at
- * block 1098191, with WLUX 0x4888e4a2.. as the positive control:
- *
- *   0x004287c4..76c6  eth_getCode -> "0x"   totalSupply() -> "0x" (revert)
- *   0x4888e4a2..8b3e  eth_getCode -> 3462   totalSupply() -> 159126795.518e18
- *
- * So /genesis reads totalMinted()/totalLuxLocked() live and reports the read as
- * unavailable when it reverts, instead of printing the tier table that used to
- * be hard-coded into the page.
+ * GenesisNFTs.sol state, both public and both answering: totalMinted() → 3,
+ * totalLuxLocked() → 3e27 wei, which is 3,000,000,000 LUX bonded across the
+ * three tokens.
  */
-export const GENESIS_NFT: Record<number, `0x${string}`> = {
-  96369: '0x004287c47efc912fec391979154454a8017a76c6',
-}
-
-/** GenesisNFTs.sol reads: totalMinted():829, totalLuxLocked():214 (public state). */
 export const GENESIS_ABI = [
   { type: 'function', name: 'totalMinted', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
   { type: 'function', name: 'totalLuxLocked', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
+  { type: 'function', name: 'owner', stateMutability: 'view', inputs: [], outputs: [{ type: 'address' }] },
 ] as const
 
 export const ERC721_ABI = [
-  { type: 'function', name: 'balanceOf', stateMutability: 'view', inputs: [{ name: 'owner', type: 'address' }], outputs: [{ type: 'uint256' }] },
-  { type: 'function', name: 'ownerOf', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'address' }] },
-  { type: 'function', name: 'tokenURI', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'string' }] },
   { type: 'function', name: 'name', stateMutability: 'view', inputs: [], outputs: [{ type: 'string' }] },
   { type: 'function', name: 'symbol', stateMutability: 'view', inputs: [], outputs: [{ type: 'string' }] },
   { type: 'function', name: 'totalSupply', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { type: 'function', name: 'getApproved', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'address' }] },
-  { type: 'function', name: 'approve', stateMutability: 'nonpayable', inputs: [{ name: 'to', type: 'address' }, { name: 'tokenId', type: 'uint256' }], outputs: [] },
-  { type: 'function', name: 'setApprovalForAll', stateMutability: 'nonpayable', inputs: [{ name: 'operator', type: 'address' }, { name: 'approved', type: 'bool' }], outputs: [] },
-  { type: 'function', name: 'transferFrom', stateMutability: 'nonpayable', inputs: [{ name: 'from', type: 'address' }, { name: 'to', type: 'address' }, { name: 'tokenId', type: 'uint256' }], outputs: [] },
+  { type: 'function', name: 'ownerOf', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'address' }] },
+  { type: 'function', name: 'tokenURI', stateMutability: 'view', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ type: 'string' }] },
 ] as const
 
-export const ERC1155_ABI = [
-  { type: 'function', name: 'balanceOf', stateMutability: 'view', inputs: [{ name: 'owner', type: 'address' }, { name: 'id', type: 'uint256' }], outputs: [{ type: 'uint256' }] },
-  { type: 'function', name: 'uri', stateMutability: 'view', inputs: [{ name: 'id', type: 'uint256' }], outputs: [{ type: 'string' }] },
+/** ERC-165. `supportsInterface` is how a collection declares what it is. */
+export const ERC165_ABI = [
+  { type: 'function', name: 'supportsInterface', stateMutability: 'view', inputs: [{ name: 'id', type: 'bytes4' }], outputs: [{ type: 'bool' }] },
 ] as const
 
-/** IMarket — standard/contracts/nft/Market.sol:37-48. */
-export const MARKET_ABI = [
+/**
+ * ERC-2981 quotes a royalty for a sale price rather than publishing a rate, so
+ * the rate is read by asking for one whole token: royaltyInfo(id, 1e18)
+ * returns the receiver and the share. Lux Genesis answers 2.5e16 — 2.5% — to
+ * the collection owner.
+ */
+export const ERC2981_ABI = [
   {
     type: 'function',
-    name: 'list',
-    stateMutability: 'nonpayable',
-    inputs: [
-      { name: 'nftContract', type: 'address' },
-      { name: 'tokenId', type: 'uint256' },
-      { name: 'paymentToken', type: 'address' },
-      { name: 'price', type: 'uint256' },
-      { name: 'duration', type: 'uint256' },
-    ],
-    outputs: [{ type: 'bytes32' }],
+    name: 'royaltyInfo',
+    stateMutability: 'view',
+    inputs: [{ name: 'tokenId', type: 'uint256' }, { name: 'salePrice', type: 'uint256' }],
+    outputs: [{ type: 'address' }, { type: 'uint256' }],
   },
-  { type: 'function', name: 'cancelListing', stateMutability: 'nonpayable', inputs: [{ name: 'listingId', type: 'bytes32' }], outputs: [] },
-  { type: 'function', name: 'buy', stateMutability: 'payable', inputs: [{ name: 'listingId', type: 'bytes32' }], outputs: [] },
-  {
-    type: 'function',
-    name: 'makeOffer',
-    stateMutability: 'nonpayable',
-    inputs: [
-      { name: 'nftContract', type: 'address' },
-      { name: 'tokenId', type: 'uint256' },
-      { name: 'paymentToken', type: 'address' },
-      { name: 'amount', type: 'uint256' },
-      { name: 'duration', type: 'uint256' },
-    ],
-    outputs: [{ type: 'bytes32' }],
-  },
-  { type: 'function', name: 'cancelOffer', stateMutability: 'nonpayable', inputs: [{ name: 'offerId', type: 'bytes32' }], outputs: [] },
-  { type: 'function', name: 'acceptOffer', stateMutability: 'nonpayable', inputs: [{ name: 'offerId', type: 'bytes32' }], outputs: [] },
 ] as const
 
-export const LSSVM_PAIR_ABI = [] as const
+export const INTERFACE = {
+  erc721: '0x80ac58cd',
+  erc1155: '0xd9b67a26',
+  royalty: '0x2a55205a',
+} as const
+
+/** The unit royaltyInfo is quoted against, so the answer reads as a rate. */
+export const ONE = 10n ** 18n
+
+/**
+ * GenesisNFTs.sol keeps a record per token — `mapping(uint256 => TokenMeta)
+ * public tokenMeta` — and its generated getter answers on chain today. It is
+ * the only per-item metadata that exists anywhere on Lux: the indexer holds
+ * none, and the collection's tokenURI is one malformed string shared by all
+ * three tokens. Every token has a name in it: #0 "Genesis Validator #51",
+ * #1 "Genesis Validator #100", #2 "The Terminator".
+ *
+ * `market` is the marketplace the collection would route a sale through. It
+ * reads the zero address, which is the contract itself saying no marketplace is
+ * wired to it.
+ */
+export const GENESIS_TOKEN_ABI = [
+  {
+    type: 'function',
+    name: 'tokenMeta',
+    stateMutability: 'view',
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
+    outputs: [
+      { name: 'nftType', type: 'uint8' },
+      { name: 'tier', type: 'uint8' },
+      { name: 'name', type: 'string' },
+      { name: 'originTokenId', type: 'uint256' },
+      { name: 'luxLocked', type: 'uint256' },
+      { name: 'timestamp', type: 'uint256' },
+      { name: 'reserved', type: 'bool' },
+    ],
+  },
+  { type: 'function', name: 'market', stateMutability: 'view', inputs: [], outputs: [{ type: 'address' }] },
+  { type: 'function', name: 'salesOpen', stateMutability: 'view', inputs: [], outputs: [{ type: 'bool' }] },
+] as const
+
+/** GenesisNFTs.sol:129 and :134, in declaration order. */
+export const NFT_TYPE = ['Validator', 'Card', 'Coin'] as const
+export const TIER = ['Genesis', 'Validator', 'Mini', 'Nano'] as const

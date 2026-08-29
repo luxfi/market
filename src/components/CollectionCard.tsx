@@ -1,57 +1,55 @@
 'use client'
 
 import Link from 'next/link'
-import { CHAIN_INFO } from '@/lib/chains'
-import type { ExplorerToken } from '@/lib/explorer'
+import * as links from '@/lib/links'
+import type { Token } from '@/lib/explorer'
+import type { Chain } from '@/lib/registry'
 
-interface CollectionCardProps {
-  token: ExplorerToken
-  chainId: number
-  rank?: number
+// Supply and holder count come from `total_supply` and `holders_count`. The
+// card used to read `token.address` and `token.holders`, which the indexer does
+// not send under those names, so every link pointed at `undefined`, every row
+// shared one React key, and every holder count printed three dashes.
+
+function Figure({ value, unit }: { value: string | null; unit: string }) {
+  if (value === null) return <span className="text-muted-foreground">no {unit} reported</span>
+  return <>{Number(value).toLocaleString()} {unit}</>
 }
 
-export function CollectionCard({ token, chainId, rank }: CollectionCardProps) {
-  const chainInfo = CHAIN_INFO[chainId]
-
+export function CollectionCard({
+  token,
+  chain,
+  rank,
+}: {
+  token: Token
+  chain: Chain
+  rank?: number
+}) {
   return (
-    <Link
-      href={`/collection/${chainId}/${token.address}`}
-      className="no-underline text-inherit"
-    >
-      <div className="bg-card rounded-xl p-4 border border-border flex items-center gap-4 transition-colors cursor-pointer hover:border-muted-foreground/30 hover:bg-secondary/50">
+    <Link href={links.collection(chain, token.address)} className="text-inherit no-underline">
+      <div className="flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-muted-foreground/30 hover:bg-secondary/50">
         {rank !== undefined && (
-          <div className="text-sm font-bold text-muted-foreground w-6 text-center font-mono">
+          <div className="w-6 text-center font-mono text-sm font-bold text-muted-foreground">
             {rank}
           </div>
         )}
-        {/* Collection icon */}
-        <div
-          className="w-14 h-14 rounded-[10px] shrink-0 flex items-center justify-center text-xl font-bold text-muted-foreground/30 bg-cover bg-center"
-          style={
-            token.icon_url
-              ? { backgroundImage: `url(${token.icon_url})` }
-              : { background: 'linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)))' }
-          }
-        >
-          {!token.icon_url && (token.symbol?.charAt(0) ?? '?')}
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[10px] bg-secondary text-xl font-bold text-muted-foreground">
+          {token.symbol?.charAt(0) ?? '?'}
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-semibold truncate">
-            {token.name}
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[15px] font-semibold">
+            {token.name ?? token.address}
           </div>
-          <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
+          <div className="mt-1 flex gap-4 text-xs text-muted-foreground">
             <span>{token.type}</span>
-            {chainInfo && (
-              <span className="text-foreground">{chainInfo.name}</span>
-            )}
+            <span className="font-mono">{token.symbol}</span>
           </div>
         </div>
-        <div className="text-right shrink-0">
-          <div className="text-[13px]">
-            {token.holders ? Number(token.holders).toLocaleString() : '---'} holders
+        <div className="shrink-0 text-right text-[13px]">
+          <div>
+            <Figure value={token.holders} unit="holders" />
           </div>
-          <div className="text-[11px] text-muted-foreground mt-0.5">
-            {token.total_supply ? Number(token.total_supply).toLocaleString() : '---'} items
+          <div className="mt-0.5 text-[11px] text-muted-foreground">
+            <Figure value={token.supply} unit="items" />
           </div>
         </div>
       </div>

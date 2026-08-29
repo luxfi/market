@@ -1,96 +1,97 @@
 'use client'
 
-import Link from 'next/link'
-import { CHAIN_INFO, explorerUrl } from '@/lib/chains'
 import { ExternalLink } from '@luxfi/ui/icons'
-import type { ExplorerTransfer } from '@/lib/explorer'
+import Link from 'next/link'
+import type { Token, Transfer } from '@/lib/explorer'
+import * as links from '@/lib/links'
+import { addressUrl, txUrl, type Chain } from '@/lib/registry'
 import { shortenAddress } from '@/lib/utils'
 
-function getEventType(method: string): { label: string } {
-  const m = method.toLowerCase()
-  if (m.includes('mint') || m === 'transfer') return { label: 'Transfer' }
-  if (m.includes('safe')) return { label: 'Transfer' }
-  return { label: method || 'Transfer' }
+const ZERO = '0x0000000000000000000000000000000000000000'
+
+function Hash({ chain, hash }: { chain: Chain; hash: string }) {
+  const href = addressUrl(chain, hash)
+  const text = hash === ZERO ? 'null address' : shortenAddress(hash)
+  if (!href) return <span className="font-mono text-xs text-muted-foreground">{text}</span>
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="font-mono text-xs text-muted-foreground no-underline hover:text-foreground"
+    >
+      {text}
+    </a>
+  )
 }
 
-interface ActivityRowProps {
-  transfer: ExplorerTransfer
-  chainId: number
-}
-
-export function ActivityRow({ transfer, chainId }: ActivityRowProps) {
-  const chainInfo = CHAIN_INFO[chainId]
-  const explorerBase = explorerUrl(chainId)
-  const event = getEventType(transfer.method ?? '')
-  const isMint = transfer.from.hash === '0x0000000000000000000000000000000000000000'
-  const tokenId = transfer.total?.token_id ?? '?'
+export function ActivityRow({
+  transfer,
+  chain,
+  token,
+  id,
+}: {
+  transfer: Transfer
+  chain: Chain
+  /** The collection, matched by address against the chain's token list. */
+  token?: Token
+  /** Token id read from the Transfer log, when the log was in reach. */
+  id?: string
+}) {
+  const mint = transfer.from === ZERO
+  const name = token?.name ?? token?.symbol ?? shortenAddress(transfer.token.address)
+  const tx = txUrl(chain, transfer.tx)
 
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-border text-[13px]">
-      {/* Event type */}
-      <div
-        className={`px-2.5 py-1 rounded-md text-xs font-semibold w-[72px] text-center shrink-0 ${
-          isMint
-            ? 'bg-success/10 text-success'
-            : 'bg-muted-foreground/10 text-muted-foreground'
-        }`}
-      >
-        {isMint ? 'Mint' : event.label}
+    <div className="flex items-center gap-3 border-b border-border py-3 text-[13px]">
+      <div className="w-[72px] shrink-0 rounded-md bg-muted px-2.5 py-1 text-center text-xs font-semibold">
+        {mint ? 'Mint' : 'Transfer'}
       </div>
 
-      {/* Item */}
-      <div className="flex-1 min-w-0">
-        <Link
-          href={`/nft/${chainId}/${transfer.token.address}/${tokenId}`}
-          className="text-foreground no-underline font-medium hover:underline"
-        >
-          {transfer.token.name ?? transfer.token.symbol ?? 'NFT'} #{tokenId}
-        </Link>
+      <div className="min-w-0 flex-1">
+        {id !== undefined ? (
+          <Link
+            href={links.item(chain, transfer.token.address, id)}
+            className="font-medium text-foreground no-underline hover:underline"
+          >
+            {name} #{id}
+          </Link>
+        ) : (
+          <span>
+            <Link
+              href={links.collection(chain, transfer.token.address)}
+              className="font-medium text-foreground no-underline hover:underline"
+            >
+              {name}
+            </Link>
+            <span className="ml-2 text-muted-foreground">item id not read</span>
+          </span>
+        )}
       </div>
 
-      {/* From -> To */}
-      <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
-        <a
-          href={`${explorerBase}/address/${transfer.from.hash}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted-foreground no-underline font-mono text-xs hover:text-foreground"
-        >
-          {isMint ? 'NullAddress' : shortenAddress(transfer.from.hash)}
-        </a>
-        <span className="text-[10px]">&rarr;</span>
-        <a
-          href={`${explorerBase}/address/${transfer.to.hash}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted-foreground no-underline font-mono text-xs hover:text-foreground"
-        >
-          {shortenAddress(transfer.to.hash)}
-        </a>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <Hash chain={chain} hash={transfer.from} />
+        <span className="text-[10px] text-muted-foreground">&rarr;</span>
+        <Hash chain={chain} hash={transfer.to} />
       </div>
 
-      {/* Chain */}
-      {chainInfo && (
-        <div className="text-[11px] font-semibold w-10 text-right shrink-0">
-          {chainInfo.name}
-        </div>
-      )}
-
-      {/* Time */}
-      <div className="text-muted-foreground text-xs w-20 text-right shrink-0">
-        {transfer.timestamp ? new Date(transfer.timestamp).toLocaleDateString() : '---'}
+      <div className="w-24 shrink-0 text-right text-xs text-muted-foreground">
+        {transfer.time ? new Date(transfer.time).toLocaleDateString() : 'no timestamp'}
       </div>
 
-      {/* Tx link */}
-      <a
-        href={`${explorerBase}/tx/${transfer.transaction_hash}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-muted-foreground shrink-0 hover:text-foreground transition-colors"
-        title="View on explorer"
-      >
-        <ExternalLink className="h-3.5 w-3.5" />
-      </a>
+      <div className="w-5 shrink-0 text-right">
+        {tx ? (
+          <a
+            href={tx}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open the transaction on the explorer"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        ) : null}
+      </div>
     </div>
   )
 }
