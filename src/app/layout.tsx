@@ -15,13 +15,14 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Lux Market - NFT Marketplace',
+    default: 'Lux Market',
     template: '%s | Lux Market',
   },
-  description: 'Trade NFTs across all Lux chains. Seaport-powered P2P trading with LSSVM AMM liquidity pools.',
+  description:
+    'Collections, holders, transfers and AMM liquidity on every Lux chain, read live from the indexer.',
   openGraph: {
     title: 'Lux Market',
-    description: 'The NFT marketplace for the Lux ecosystem',
+    description: 'What is on the Lux chains, read live.',
     url: 'https://lux.market',
     siteName: 'Lux Market',
     type: 'website',
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Lux Market',
-    description: 'Trade NFTs across all Lux chains',
+    description: 'What is on the Lux chains, read live.',
   },
   robots: { index: true, follow: true },
 }
