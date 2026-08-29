@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useMemo } from 'react'
-import { formatUnits } from 'viem'
 import { useReadContracts } from 'wagmi'
 import { GenesisMeta } from '@/components/Genesis'
 import { Page } from '@/components/Page'
@@ -13,7 +12,7 @@ import { Source } from '@/components/Source'
 import { Card } from '@/components/ui/card'
 import type { ChainState } from '@/hooks/chain'
 import { useCollection, useTransferIds, useTransfers } from '@/hooks/queries'
-import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, GENESIS, INTERFACE, ONE } from '@/lib/contracts'
+import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, GENESIS, INTERFACE, ONE, rateLabel } from '@/lib/contracts'
 import * as links from '@/lib/links'
 import { idFor } from '@/lib/logs'
 import { addressUrl, txUrl, type Chain } from '@/lib/registry'
@@ -203,7 +202,7 @@ function Body({ state, slug, address, id }: { state: Ready; slug: string; addres
         {rate ? (
           <div>
             <span className="text-muted-foreground">Royalty </span>
-            {Number(formatUnits(rate[1], 18)) * 100}% to{' '}
+            {rateLabel(rate[1])} to{' '}
             <span className="font-mono text-xs">{rate[0]}</span>, declared through ERC-2981.
           </div>
         ) : null}

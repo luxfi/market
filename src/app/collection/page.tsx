@@ -3,7 +3,6 @@
 import { ExternalLink } from '@luxfi/ui/icons'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useMemo } from 'react'
-import { formatUnits } from 'viem'
 import { useReadContracts } from 'wagmi'
 import { ItemCard } from '@/components/ItemCard'
 import { Page } from '@/components/Page'
@@ -12,7 +11,7 @@ import { Stat } from '@/components/Stat'
 import { Card } from '@/components/ui/card'
 import type { ChainState } from '@/hooks/chain'
 import { useCollection, useCounters, useHolders, useTransfers, useTransferIds } from '@/hooks/queries'
-import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, INTERFACE, ONE } from '@/lib/contracts'
+import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, INTERFACE, ONE, rateLabel } from '@/lib/contracts'
 import { idFor } from '@/lib/logs'
 import { addressUrl, type Chain } from '@/lib/registry'
 import { shortenAddress } from '@/lib/utils'
@@ -68,7 +67,7 @@ function Declares({ chain, address }: { chain: Chain; address: string }) {
       </p>
       {rate ? (
         <p className="leading-relaxed text-muted-foreground">
-          royaltyInfo quotes {Number(formatUnits(rate[1], 18)) * 100}% of a sale to{' '}
+          royaltyInfo quotes {rateLabel(rate[1])} of a sale to{' '}
           <code className="font-mono text-xs">{rate[0]}</code>. That is what the contract would
           enforce on a marketplace that honours it; none is deployed on Lux, so nothing enforces it
           today.
