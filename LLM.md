@@ -69,6 +69,28 @@ a Postgres marketplace schema nothing writes to, and its companion
 Also true, and the reason there is no item resource: `/tokens/{addr}/instances`
 returns `{"items":[]}` for **every** collection, including the 149-token one.
 
+### The holders resource counts holdings, not holders
+
+`/tokens/{addr}/holders` serves one row per HOLDING. On an ERC-20 that is one
+row per holder and the rows are distinct — LZOO returns 11 rows for 11
+addresses. On a collection it is one row per held item: Lux Genesis returns
+three rows for two addresses, and the Uniswap position manager returns fifty
+rows that are all `0xd0ebbdcd…cee8`. `holders_count` on `/tokens` and
+`token_holders_count` on `/counters` count the same rows, so both read 3 for
+Genesis and 73 for the position manager, and neither is a holder count on a
+collection.
+
+`explorer.holders()` folds the rows by address, which is what makes the answer
+countable: the collection page counts the folded list rather than printing the
+indexer's figure, and reads "2 holders" for Genesis where the field says 3. The
+resource also pages at 50 and reports `next_page_params: null` on the page that
+fills, so a full page cannot be told from a complete one — `whole` is false
+there and the screen says "at least".
+
+`Token.holdings` carries the raw field under the name of what it counts. Only a
+screen that knows the standard may print it: the launches table shows it for a
+fungible token and says "counted per item" on a collection.
+
 ### The one place per-item metadata exists
 
 `GenesisNFTs.sol` keeps `mapping(uint256 => TokenMeta) public tokenMeta` and its
@@ -101,16 +123,27 @@ and help.
 
 `output: 'export'` renders every route ahead of time, so a path segment cannot
 hold a contract address deployed after the build. `/collection` and `/item` take
-the chain and address in the query instead; `lib/links.ts` builds those URLs.
+the chain and address in the query instead; `lib/links.ts` builds those URLs. A
+query value is whatever someone typed, so `/item` checks the id is a whole
+number before it reaches `BigInt` — `?id=abc` used to throw during render and
+take the page down to a blank screen.
 
 ## Rules this surface is held to
 
 - No invented figures. No floor price nothing computed, no holder count nothing
   counted, no activity row nothing observed, no volume nothing summed. Chain
-  totals come from the factory entity, not a sum over one page of pools.
+  totals come from the factory entity, not a sum over one page of pools. Where
+  the indexer's own figure disagrees with the chain, the chain wins and the
+  screen counts for itself.
 - Unavailable is never drawn as empty or as zero. A failed read throws in
   `lib/explorer.ts` so a screen can tell "there are none" from "we could not
-  ask", and says which it is.
+  ask", and says which it is — including one chain among several, which is why
+  holdings draws a sentence per chain that did not answer rather than nothing.
+  A value that rounds to zero is not zero either: `usd()` prints `<$1`.
+- Nothing is ranked. Collections arrive by name, the launches table sorts by
+  name until a reader picks a column, and no card carries a position. The
+  indexer answers in holder order and printing that unlabelled would rank one
+  project above another on a figure nobody chose.
 - Every screen names the chain it read (`components/Source.tsx`).
 - Colour through tokens only. Monochrome carries state by weight and label,
   never by hue.
@@ -126,5 +159,20 @@ pnpm install && pnpm build     # static export to out/
 pnpm dev                       # port 3100
 ```
 
-The export writes `collections.html`, not `collections/index.html`, so the host
-has to map `/x` → `x.html`.
+`trailingSlash: true`, so every route exports as its own `index.html` and any
+static host resolves it without rewrite rules. Without it the export wrote
+`support.html` beside a `support/` directory and a host that prefers the
+directory served a listing where the page belongs.
+
+## Applying
+
+`/launch` composes the application and hands it over; there is no server here to
+receive one and no intake endpoint was found on `api.lux.financial` or
+`api.hanzo.ai`, so the page says so rather than accepting a submission it would
+drop. Signing in with Hanzo IAM names the applicant and is not a condition of
+applying — the composed record says the reply goes to the address it arrives
+from. The contract address is read live with `eth_getCode` and labelled
+"observed", which is the one line on the application nobody typed.
+
+A real intake would be one constant and one handler. A queue that holds
+applications is what would make this a pipeline rather than a mailbox.

@@ -17,6 +17,13 @@ import { withLuxUi } from '@luxfi/ui/next'
 // renders a Sheet and the next throws on the same component.
 const nextConfig = {
   output: 'export',
+  // Without this the export writes `collections.html` and `support.html`, and
+  // the host has to be told to map `/collections` onto one of them. `/support`
+  // was worse than that: `support.html` and a `support/` directory both exist,
+  // so a host that prefers the directory serves a listing where a page belongs.
+  // Trailing slashes make every route its own `index.html`, which every static
+  // host resolves without being configured.
+  trailingSlash: true,
   outputFileTracingRoot: path.resolve(import.meta.dirname ?? __dirname),
   reactStrictMode: true,
   typescript: { ignoreBuildErrors: false },

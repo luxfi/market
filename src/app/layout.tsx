@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Lux Market',
     description: 'What is on the Lux chains, read live.',
   },

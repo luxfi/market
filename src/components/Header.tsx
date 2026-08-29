@@ -81,7 +81,7 @@ export function Header() {
   return (
     <AppNav
       brand="Lux Market"
-      links={LINKS.map((l) => ({ ...l, active: pathname.startsWith(l.href) }))}
+      links={LINKS.map((l) => ({ ...l, active: pathname === l.href || pathname.startsWith(`${l.href}/`) }))}
     >
       <ChainSelector />
       {/* wagmi mounts only once the registry has named the chains it can reach. */}

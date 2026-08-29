@@ -230,11 +230,27 @@ function Body({ state, slug, address, id }: { state: Ready; slug: string; addres
   )
 }
 
+/**
+ * A token id is a uint256 and the query string is whatever someone typed. The
+ * id reaches `BigInt` in the contract calls below, which throws during render
+ * on anything else — `?id=abc` took the whole page down to a blank screen with
+ * a client-side exception. Checked here, once, before it is used.
+ */
+const isId = (v: string) => /^\d+$/.test(v)
+
 function FromQuery({ state }: { state: Ready }) {
   const params = useSearchParams()
   const slug = params.get('chain')
   const address = params.get('address')?.toLowerCase()
   const id = params.get('id')
+
+  if (id !== null && !isId(id))
+    return (
+      <Card className="max-w-[76ch] p-6 text-sm leading-relaxed text-muted-foreground">
+        <code className="font-mono text-xs">{id}</code> is not a token id. An id is a whole number,
+        and no collection on Lux has one that is not.
+      </Card>
+    )
 
   if (!slug || !address || id === null)
     return (

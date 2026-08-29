@@ -29,8 +29,22 @@ function Amount({ value, decimals }: { value: string; decimals: string | null })
 }
 
 function OnChain({ chain, wallet }: { chain: Chain; wallet: string }) {
-  const { data, isLoading, isError } = useHoldings(chain, wallet)
-  if (isLoading || isError || !data?.length) return null
+  const { data, isLoading, isError, error } = useHoldings(chain, wallet)
+
+  // A chain that did not answer used to render as nothing at all, which reads
+  // as "you hold nothing here" — the opposite of what happened. Say which it is.
+  if (isError)
+    return (
+      <section className="mb-10">
+        <h2 className="mb-3 text-base font-semibold">{chain.name}</h2>
+        <Card className="p-6 text-sm text-muted-foreground">
+          The indexer did not answer for {chain.name}, so what this wallet holds there is unread:{' '}
+          {(error as Error).message}
+        </Card>
+      </section>
+    )
+
+  if (isLoading || !data?.length) return null
 
   const items = data.filter((h) => isNft(h.token.type) && h.id !== null)
   const tokens = data.filter((h) => !isNft(h.token.type))
