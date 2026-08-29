@@ -36,6 +36,16 @@ export type Row = {
   id: string | null
 }
 
+/**
+ * Does this row still need its item read out of the chain?
+ *
+ * One predicate, named once: the hook uses it to decide whether to make a
+ * request at all, and the read below uses it to decide which rows to ask about.
+ * Written twice it becomes two answers to the same question the day one of them
+ * changes.
+ */
+export const unnamed = (r: Row) => r.id === null
+
 const key = (block: number, logIndex: number) => `${block}:${logIndex}`
 
 type Log = { blockNumber: string; logIndex: string; topics: string[] }
@@ -90,10 +100,9 @@ export async function transferIds(chain: Chain, rows: Row[]): Promise<Map<string
 
   const byContract = new Map<string, number[]>()
   for (const r of rows) {
-    // Rows the indexer already named cost nothing to skip and everything to
-    // re-read: when it names all of them this loop leaves `asks` empty, no
+    // When the indexer names every row this loop leaves `asks` empty, no
     // request is made, and the fallback has retired itself.
-    if (r.id !== null) continue
+    if (!unnamed(r)) continue
     if (r.token.type !== 'ERC-721') continue
     const blocks = byContract.get(r.token.address) ?? []
     blocks.push(r.block)

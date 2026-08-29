@@ -6,7 +6,7 @@
 import { useQuery } from '@tanstack/react-query'
 import * as amm from '@/lib/amm'
 import * as explorer from '@/lib/explorer'
-import { transferIds } from '@/lib/logs'
+import { transferIds, unnamed } from '@/lib/logs'
 import type { Chain } from '@/lib/registry'
 
 export const useCollections = (chain: Chain, search?: string) =>
@@ -73,15 +73,15 @@ export const useStats = (chain: Chain) =>
  * requests without anything being switched off.
  */
 export const useTransferIds = (chain: Chain, rows: explorer.Transfer[] | undefined) => {
-  const unnamed = rows?.filter((r) => r.id === null) ?? []
+  const asking = rows?.filter(unnamed) ?? []
   return useQuery({
-    queryKey: ['ids', chain.slug, unnamed.map((r) => `${r.block}:${r.logIndex}`).join(',')],
-    queryFn: () => transferIds(chain, unnamed),
-    enabled: Boolean(chain.rpc && unnamed.length),
+    queryKey: ['ids', chain.slug, asking.map((r) => `${r.block}:${r.logIndex}`).join(',')],
+    queryFn: () => transferIds(chain, asking),
+    enabled: Boolean(chain.rpc && asking.length),
     // With nothing to ask, the answer is the empty join rather than a pending
     // read: a screen that waits on a query that will never run reads "loading"
     // for ever.
-    initialData: unnamed.length ? undefined : () => new Map<string, string>(),
+    initialData: asking.length ? undefined : () => new Map<string, string>(),
   })
 }
 
