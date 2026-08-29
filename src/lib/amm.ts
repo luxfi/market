@@ -90,6 +90,15 @@ export async function pools(chain: Chain): Promise<Pool[]> {
 /** 3000 → "0.30%". */
 export const feeLabel = (fee: number) => `${(fee / 10_000).toFixed(2)}%`
 
-/** The subgraph reports value as a decimal string of dollars. */
-export const usd = (value: string) =>
-  `$${Number(value).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+/**
+ * The subgraph reports value as a decimal string of dollars.
+ *
+ * Whole dollars are the readable unit at this width, but rounding a pool that
+ * holds forty cents down to "$0" prints the same thing as a pool that holds
+ * nothing. Below a dollar it says so instead.
+ */
+export const usd = (value: string) => {
+  const n = Number(value)
+  if (n > 0 && n < 1) return '<$1'
+  return `$${n.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+}

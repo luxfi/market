@@ -41,8 +41,8 @@ function List({ chain, search }: { chain: Chain; search: string }) {
 
   return (
     <div className="flex flex-col gap-2">
-      {data.map((token, i) => (
-        <CollectionCard key={token.address} token={token} chain={chain} rank={i + 1} />
+      {data.map((token) => (
+        <CollectionCard key={token.address} token={token} chain={chain} />
       ))}
     </div>
   )
@@ -54,7 +54,7 @@ export default function CollectionsPage() {
   return (
     <Page
       title="Collections"
-      intro="Every ERC-721 and ERC-1155 contract the indexer records on the selected chain, with the holder count and item count it reports for each."
+      intro="Every ERC-721 and ERC-1155 contract the indexer records on the selected chain, by name, with the number of items each reports. Open one for its holders, its transfers and what its contract declares."
     >
       {({ chain }) => (
         <>

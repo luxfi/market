@@ -134,32 +134,45 @@ function Items({
 }
 
 function Holders({ chain, address }: { chain: Chain; address: string }) {
-  const { data, isLoading } = useHolders(chain, address)
+  const { data, isLoading, isError, error } = useHolders(chain, address)
   if (isLoading) return <Card className="p-6 text-sm text-muted-foreground">Reading holders…</Card>
-  if (!data?.length)
+  if (isError)
+    return (
+      <Card className="p-6 text-sm text-muted-foreground">
+        The holders read did not answer: {(error as Error).message}
+      </Card>
+    )
+  if (!data?.list.length)
     return <Card className="p-6 text-sm text-muted-foreground">The indexer reports no holders.</Card>
 
   return (
-    <Card className="divide-y divide-border">
-      {data.map((h, i) => {
-        const href = addressUrl(chain, h.address)
-        return (
-          <div key={`${h.address}-${i}`} className="flex items-center gap-3 px-4 py-3 text-[13px]">
-            <span className="w-6 text-center font-mono text-muted-foreground">{i + 1}</span>
-            <span className="min-w-0 flex-1 truncate font-mono">
-              {href ? (
-                <a href={href} target="_blank" rel="noopener noreferrer" className="no-underline hover:underline">
-                  {h.address}
-                </a>
-              ) : (
-                h.address
-              )}
-            </span>
-            <span className="font-mono">{h.count}</span>
-          </div>
-        )
-      })}
-    </Card>
+    <>
+      <Card className="divide-y divide-border">
+        {data.list.map((h) => {
+          const href = addressUrl(chain, h.address)
+          return (
+            <div key={h.address} className="flex items-center gap-3 px-4 py-3 text-[13px]">
+              <span className="min-w-0 flex-1 truncate font-mono">
+                {href ? (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="no-underline hover:underline">
+                    {h.address}
+                  </a>
+                ) : (
+                  h.address
+                )}
+              </span>
+              <span className="font-mono">{h.count}</span>
+            </div>
+          )
+        })}
+      </Card>
+      {!data.whole ? (
+        <p className="mt-3 max-w-[76ch] text-[13px] leading-relaxed text-muted-foreground">
+          The indexer served a full page and reported no next page, so this is the part of the
+          holder set it will hand over rather than all of it.
+        </p>
+      ) : null}
+    </>
   )
 }
 
@@ -174,6 +187,7 @@ function Body({ state, slug, address }: { state: Ready; slug: string; address: s
 
   const token = useCollection(chain ?? state.chain, address)
   const counters = useCounters(chain ?? state.chain, address)
+  const holders = useHolders(chain ?? state.chain, address)
 
   if (!chain)
     return (
@@ -228,7 +242,21 @@ function Body({ state, slug, address }: { state: Ready; slug: string; address: s
 
       <div className="mb-8 grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3">
         <Stat label="Items" value={token.data.supply} />
-        <Stat label="Holders" value={token.data.holders} />
+        {/*
+          Counted from the holders read, not from the indexer's `holders_count`.
+          That field counts holdings on a collection: it reads 3 for Lux Genesis,
+          where two addresses hold the three tokens, and 73 for a collection
+          whose whole served page belongs to one address.
+        */}
+        <Stat
+          label="Holders"
+          value={
+            holders.data
+              ? `${holders.data.whole ? '' : 'at least '}${holders.data.list.length.toLocaleString()}`
+              : null
+          }
+          note="addresses holding at least one"
+        />
         <Stat
           label="Transfers"
           value={counters.data ? counters.data.transfers.toLocaleString() : null}
