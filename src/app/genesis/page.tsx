@@ -1,114 +1,170 @@
 'use client'
 
+import { ExternalLink } from '@luxfi/ui/icons'
+import Link from 'next/link'
 import { formatUnits } from 'viem'
 import { useReadContracts } from 'wagmi'
-import { ArrowRight, ExternalLink } from '@luxfi/ui/icons'
-import { Header } from '@/components/Header'
+import { GenesisMeta } from '@/components/Genesis'
+import { Page } from '@/components/Page'
+import { Source } from '@/components/Source'
+import { Stat } from '@/components/Stat'
 import { Card } from '@/components/ui/card'
-import { useChainContext } from '@/hooks/useChain'
-import { CHAIN_INFO, explorerUrl } from '@/lib/chains'
-import { GENESIS_ABI, GENESIS_NFT } from '@/lib/contracts'
+import {
+  ERC2981_ABI,
+  GENESIS,
+  GENESIS_ABI,
+  GENESIS_TOKEN_ABI,
+  ONE,
+} from '@/lib/contracts'
+import * as links from '@/lib/links'
+import { addressUrl, type Chain } from '@/lib/registry'
 
-/** One tile. `value` is always a measurement; there is no default to fall back on. */
-function Stat({ label, value }: { label: string; value: string }) {
+// THE PAGE WAS PROBING A CONTRACT THAT DOES NOT EXIST.
+//
+// It read 0x004287c4..76c6, which returns 0x from eth_getCode, and reported —
+// correctly, and to its credit — that supply and bonded LUX were unavailable.
+// The collection is alive at 0x9e04fc57..; the indexer's own search finds it.
+// Repointed, every figure on this page is a live read: three tokens, three
+// billion LUX bonded, a 2.5% royalty declared through ERC-2981, and a
+// marketplace address of zero, which is the collection saying that nothing is
+// wired to sell it.
+
+function Collection({ chain, address }: { chain: Chain; address: `0x${string}` }) {
+  const contract = { chainId: chain.id, address }
+  const { data, isLoading } = useReadContracts({
+    allowFailure: true,
+    contracts: [
+      { ...contract, abi: GENESIS_ABI, functionName: 'totalMinted' },
+      { ...contract, abi: GENESIS_ABI, functionName: 'totalLuxLocked' },
+      { ...contract, abi: GENESIS_ABI, functionName: 'owner' },
+      { ...contract, abi: GENESIS_TOKEN_ABI, functionName: 'market' },
+      { ...contract, abi: ERC2981_ABI, functionName: 'royaltyInfo', args: [0n, ONE] },
+    ],
+    query: { enabled: Boolean(chain.rpc) },
+  })
+
+  if (isLoading || !data)
+    return <Card className="p-6 text-sm text-muted-foreground">Reading the collection on {chain.name}…</Card>
+
+  const [minted, locked, owner, market, quote] = data
+  const count = minted.status === 'success' ? Number(minted.result as bigint) : null
+  const rate =
+    quote.status === 'success' ? (quote.result as readonly [string, bigint]) : null
+  const marketSet =
+    market.status === 'success' && (market.result as string) !== '0x0000000000000000000000000000000000000000'
+
+  const href = addressUrl(chain, address)
+
   return (
-    <Card className="p-5">
-      <div className="text-[13px] text-muted-foreground mb-1">{label}</div>
-      <div className="text-2xl font-bold font-mono">{value}</div>
-    </Card>
+    <>
+      <div className="mb-8 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+        <Stat label="Minted" value={count === null ? null : count.toLocaleString()} />
+        <Stat
+          label={`${chain.coin} bonded`}
+          value={
+            locked.status === 'success'
+              ? Number(formatUnits(locked.result as bigint, 18)).toLocaleString(undefined, {
+                  maximumFractionDigits: 0,
+                })
+              : null
+          }
+          note="permanent"
+        />
+        <Stat
+          label="Royalty"
+          value={rate ? `${Number(formatUnits(rate[1], 18)) * 100}%` : null}
+          note="declared through ERC-2981"
+        />
+        <Stat
+          label="Marketplace"
+          value={market.status !== 'success' ? null : marketSet ? 'set' : 'none'}
+          note={marketSet ? (market.result as string) : 'the contract routes no sale'}
+        />
+      </div>
+
+      <Card className="mb-10 max-w-[76ch] space-y-3 p-6 text-sm leading-relaxed">
+        <p className="text-muted-foreground">
+          Each token bonds {chain.coin} to itself permanently — GenesisNFTs.sol adds the amount to{' '}
+          <code className="font-mono text-xs">totalLuxLocked</code> at mint and has no path that
+          takes it back out. The tier decides how much: 1B for Genesis, 100M for Validator, 10M for
+          Mini, 1M for Nano, and each token below reports its own.
+        </p>
+        <p className="text-muted-foreground">
+          The collection declares a {rate ? `${Number(formatUnits(rate[1], 18)) * 100}%` : ''}{' '}
+          royalty through ERC-2981, which a marketplace has to read and honour. There is no
+          marketplace contract on any Lux chain to read it, and this collection&rsquo;s own{' '}
+          <code className="font-mono text-xs">market</code> address is zero.
+        </p>
+        {owner.status === 'success' ? (
+          <p className="text-muted-foreground">
+            Owned by <code className="font-mono text-xs">{owner.result as string}</code>.
+          </p>
+        ) : null}
+        <div className="flex gap-4 pt-1">
+          <Link
+            href={links.collection(chain, address)}
+            className="text-foreground no-underline hover:underline"
+          >
+            Holders and transfers
+          </Link>
+          {href ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-foreground no-underline hover:underline"
+            >
+              Contract <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </div>
+      </Card>
+
+      <h2 className="mb-4 text-xl font-semibold">The tokens</h2>
+      {count === null ? (
+        <Card className="p-6 text-sm text-muted-foreground">
+          <code className="font-mono text-xs">totalMinted</code> does not answer, so there is no
+          list of tokens to draw.
+        </Card>
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3">
+          {Array.from({ length: Math.min(count, 24) }, (_, id) => (
+            <Link
+              key={id}
+              href={links.item(chain, address, String(id))}
+              className="text-inherit no-underline"
+            >
+              <GenesisMeta chain={chain} address={address} id={String(id)} />
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
 
 export default function GenesisPage() {
-  const { chainId } = useChainContext()
-  const chain = CHAIN_INFO[chainId]
-  const address = GENESIS_NFT[chainId]
-
-  const { data, isLoading, isError } = useReadContracts({
-    allowFailure: false,
-    contracts: [
-      { chainId, address, abi: GENESIS_ABI, functionName: 'totalMinted' },
-      { chainId, address, abi: GENESIS_ABI, functionName: 'totalLuxLocked' },
-    ],
-    query: { enabled: Boolean(address) },
-  })
-
-  const [minted, luxLocked] = data ?? []
-
   return (
-    <div>
-      <Header />
-      <main className="max-w-[1200px] mx-auto px-6 py-8">
-        <section className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-3">Genesis NFTs</h1>
-          <p className="text-base text-muted-foreground max-w-[600px] mx-auto">
-            Each Genesis NFT bonds LUX permanently and routes the validator staking rewards on that
-            bond to whoever holds the NFT. Both figures below are read from the collection contract
-            on every page load.
-          </p>
-        </section>
-
-        {!address ? (
-          <Card className="p-6 text-center text-muted-foreground">
-            Genesis NFTs are a Lux Network collection. No Genesis contract is registered for{' '}
-            {chain?.name ?? `chain ${chainId}`}.
-          </Card>
-        ) : isLoading ? (
-          <Card className="p-6 text-center text-muted-foreground">
-            Reading the Genesis contract on {chain?.name ?? `chain ${chainId}`}…
-          </Card>
-        ) : isError || data === undefined ? (
-          <Card className="p-6 space-y-3">
-            <div className="font-semibold">Supply and bonded LUX are unavailable.</div>
-            <p className="text-sm text-muted-foreground">
-              The Genesis collection is registered at{' '}
-              <code className="font-mono text-xs">{address}</code> on{' '}
-              {chain?.name ?? `chain ${chainId}`}, but the contract does not answer:{' '}
-              <code className="font-mono text-xs">eth_getCode</code> returns{' '}
-              <code className="font-mono text-xs">0x</code> and every view call reverts, so there is
-              no minted count and no bonded balance to show. Nothing is reported here until the
-              contract answers again.
-            </p>
-            <a
-              className="inline-flex items-center gap-1.5 text-sm hover:underline"
-              href={`${explorerUrl(chainId)}/address/${address}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Inspect the address <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-            <Stat label="Minted" value={minted!.toLocaleString()} />
-            <Stat
-              label="LUX bonded (permanent)"
-              value={Number(formatUnits(luxLocked!, 18)).toLocaleString(undefined, {
-                maximumFractionDigits: 0,
-              })}
-            />
-          </div>
-        )}
-
-        <Card className="p-6 mt-10 text-center">
-          <h3 className="text-base font-semibold mb-4">How rewards reach a holder</h3>
-          <div className="flex items-center justify-center gap-4 flex-wrap text-sm">
-            <span>Validator staking</span>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            <span className="font-mono text-xs">ValidatorVault.depositRewards()</span>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            <span className="font-mono text-xs">LiquidLUX.depositValidatorRewards()</span>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-            <span className="font-semibold">xLUX holders</span>
-          </div>
-          <p className="text-[13px] text-muted-foreground mt-4">
-            The call path above is the design in{' '}
-            <code className="font-mono text-xs">standard/contracts/nft/GenesisNFTs.sol</code>. It is
-            not a claim about rewards paid — no reward figure appears on this page unless it was
-            read from chain.
-          </p>
-        </Card>
-      </main>
-    </div>
+    <Page
+      title="Genesis"
+      intro="A Genesis NFT bonds LUX to itself permanently. Everything below is read from the collection contract on each page load; nothing is printed that a call did not return."
+    >
+      {({ chain }) => {
+        const address = GENESIS[chain.id]
+        if (!address)
+          return (
+            <Card className="max-w-[76ch] p-6 text-sm leading-relaxed text-muted-foreground">
+              Genesis is a Lux Network collection. No Genesis contract is registered for{' '}
+              {chain.name}, and none is deployed there.
+            </Card>
+          )
+        return (
+          <>
+            <Source>Read live from {chain.name}.</Source>
+            <Collection chain={chain} address={address} />
+          </>
+        )
+      }}
+    </Page>
   )
 }

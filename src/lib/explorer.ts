@@ -1,151 +1,193 @@
-// Read path for NFT data. The unified Lux indexer serves a Blockscout-shaped
-// REST API per chain; EXPLORER_API maps chainId -> its base URL.
-import { EXPLORER_API } from '@/lib/chains'
+// The read path. One unified indexer serves every chain behind its slug, in a
+// Blockscout-shaped REST API.
+//
+// A failed read THROWS here rather than resolving to an empty page. The two
+// states look identical once they reach a list — and they mean opposite things,
+// so the screens above have to be able to tell "there are none" from "we could
+// not ask". Every caller runs through react-query, which carries the error.
+import { INDEXER, type Chain } from '@/lib/registry'
 
-export type NFTTrait = { trait_type: string; value: string | number }
+const NFT = new Set(['ERC-721', 'ERC-1155'])
 
-export type NFTMetadata = {
-  name?: string
-  description?: string
-  image?: string
-  image_url?: string
-  animation_url?: string
-  attributes?: NFTTrait[]
-}
+export const isNft = (type: string | undefined) => NFT.has(type ?? '')
 
-export type ExplorerToken = {
+export type Token = {
   address: string
   name: string | null
   symbol: string | null
   type: string
-  decimals: string | null
+  /** total_supply — for a collection, the number of items minted. */
+  supply: string | null
   holders: string | null
-  total_supply: string | null
-  icon_url: string | null
+  decimals: string | null
+  icon: string | null
 }
 
-export type ExplorerTokenInstance = {
-  id: string
-  token: ExplorerToken
-  owner: { hash: string } | null
-  image_url: string | null
-  animation_url: string | null
-  metadata: NFTMetadata | null
+export type Transfer = {
+  block: number
+  /** EVM log index. With `block` it identifies the Transfer log exactly. */
+  logIndex: number
+  time: string | null
+  tx: string
+  from: string
+  to: string
+  token: { address: string; type: string }
 }
 
-export type ExplorerTransfer = {
-  block_number: number
-  timestamp: string | null
-  transaction_hash: string
-  method?: string
-  from: { hash: string }
-  to: { hash: string }
-  token: ExplorerToken
-  total: { value: string | null; token_id: string | null; decimals: string | null } | null
-}
-
-export type ExplorerAddressToken = {
-  token: ExplorerToken
-  token_id: string | null
-  token_instance?: ExplorerTokenInstance | null
+export type Holding = {
+  token: Token
+  /** Decimal token id, or null on a fungible row. */
+  id: string | null
+  /** Raw balance: 1 for an NFT, an undivided amount for a fungible token. */
   value: string
 }
 
-export type PaginatedResponse<T> = { items: T[]; next_page_params: null }
+export type Holder = { address: string; count: string }
 
-const NFT_TYPES = new Set(['ERC-721', 'ERC-1155'])
+export type Counters = { holders: number; transfers: number }
 
-const empty = <T,>(): PaginatedResponse<T> => ({ items: [], next_page_params: null })
+export type Stats = {
+  blocks: string | null
+  transactions: string | null
+  addresses: string | null
+}
 
-async function get<T>(chainId: number, path: string, fallback: T): Promise<T> {
-  const base = EXPLORER_API[chainId]
-  if (!base) return fallback
-  try {
-    const res = await fetch(`${base}${path}`, { headers: { accept: 'application/json' } })
-    if (!res.ok) return fallback
-    return (await res.json()) as T
-  } catch {
-    return fallback
-  }
+type Page<T> = { items: T[] }
+
+async function read<T>(chain: Chain, path: string): Promise<T> {
+  const res = await fetch(`${INDEXER}/${chain.slug}${path}`, {
+    headers: { accept: 'application/json' },
+  })
+  if (!res.ok) throw new Error(`${chain.slug}${path} → ${res.status}`)
+  return (await res.json()) as T
 }
 
 /**
- * NFT collections on a chain. The indexer ignores `?type=`, so the ERC-721 /
- * ERC-1155 filter is applied here.
+ * The indexer names a token's address `address_hash` under /tokens and
+ * `address` under /addresses/{hash}/tokens. Both shapes are normalised here,
+ * once, so nothing above this file has to know which endpoint it came from.
  */
-export async function getCollections(
-  chainId: number,
-  search?: string,
-): Promise<PaginatedResponse<ExplorerToken>> {
-  const page = await get(chainId, '/tokens', empty<ExplorerToken>())
+type RawToken = {
+  address_hash?: string
+  address?: string
+  name: string | null
+  symbol: string | null
+  type: string
+  total_supply: string | null
+  holders_count?: string | null
+  decimals: string | null
+  icon_url: string | null
+}
+
+const token = (t: RawToken): Token => ({
+  address: (t.address_hash ?? t.address ?? '').toLowerCase(),
+  name: t.name,
+  symbol: t.symbol,
+  type: t.type,
+  supply: t.total_supply,
+  holders: t.holders_count ?? null,
+  decimals: t.decimals,
+  icon: t.icon_url,
+})
+
+type RawTransfer = {
+  block_number: number
+  log_index: number
+  timestamp: string | null
+  transaction_hash: string
+  from: { hash: string }
+  to: { hash: string }
+  token: { address_hash: string; type: string }
+}
+
+const transfer = (t: RawTransfer): Transfer => ({
+  block: t.block_number,
+  logIndex: t.log_index,
+  time: t.timestamp,
+  tx: t.transaction_hash,
+  from: t.from.hash,
+  to: t.to.hash,
+  token: { address: t.token.address_hash.toLowerCase(), type: t.token.type },
+})
+
+/** A 32-byte hex token id as the decimal a person reads. */
+const id = (raw: string | null): string | null => {
+  if (raw === null) return null
+  try {
+    return BigInt(raw).toString()
+  } catch {
+    return null
+  }
+}
+
+/** Every token the chain indexes, fungible and not. */
+export async function tokens(chain: Chain): Promise<Token[]> {
+  const page = await read<Page<RawToken>>(chain, '/tokens')
+  return page.items.map(token)
+}
+
+/** The NFT collections among them. The indexer ignores `?type=`. */
+export async function collections(chain: Chain, search?: string): Promise<Token[]> {
   const q = search?.trim().toLowerCase()
-  const items = page.items.filter(
+  return (await tokens(chain)).filter(
     (t) =>
-      NFT_TYPES.has(t.type) &&
+      isNft(t.type) &&
       (!q || `${t.name ?? ''} ${t.symbol ?? ''} ${t.address}`.toLowerCase().includes(q)),
   )
-  return { items, next_page_params: null }
 }
 
-export const getToken = (chainId: number, address: string) =>
-  get<ExplorerToken | null>(chainId, `/tokens/${address}`, null)
-
-export const getTokenInstances = (chainId: number, address: string) =>
-  get(chainId, `/tokens/${address}/instances`, empty<ExplorerTokenInstance>())
-
-export const getTokenInstance = (chainId: number, address: string, id: string) =>
-  get<ExplorerTokenInstance | null>(chainId, `/tokens/${address}/instances/${id}`, null)
-
-export const getTokenTransfers = (chainId: number, address: string) =>
-  get(chainId, `/tokens/${address}/transfers`, empty<ExplorerTransfer>())
-
-/** Chain-wide NFT activity feed. The indexer has no type filter, so filter here. */
-export async function getNftTransfers(
-  chainId: number,
-): Promise<PaginatedResponse<ExplorerTransfer>> {
-  const page = await get(chainId, '/token-transfers', empty<ExplorerTransfer>())
-  return { items: page.items.filter((t) => NFT_TYPES.has(t.token?.type)), next_page_params: null }
+export async function collection(chain: Chain, address: string): Promise<Token> {
+  return token(await read<RawToken>(chain, `/tokens/${address}`))
 }
 
-export const getTokenInstanceTransfers = (chainId: number, address: string, id: string) =>
-  get(chainId, `/tokens/${address}/instances/${id}/transfers`, empty<ExplorerTransfer>())
-
-export const getAddressTokens = (chainId: number, address: string) =>
-  get(chainId, `/addresses/${address}/tokens`, empty<ExplorerAddressToken>())
-
-/** NFTs held by an address — the same holdings feed, minus fungible rows. */
-export async function getAddressTokenInstances(
-  chainId: number,
-  address: string,
-): Promise<PaginatedResponse<ExplorerAddressToken>> {
-  const page = await getAddressTokens(chainId, address)
-  return { items: page.items.filter((r) => NFT_TYPES.has(r.token?.type)), next_page_params: null }
-}
-
-export async function searchTokens(
-  chainId: number,
-  query: string,
-): Promise<PaginatedResponse<ExplorerToken>> {
-  if (!query.trim()) return empty<ExplorerToken>()
-  return getCollections(chainId, query)
-}
-
-export function resolveMediaUrl(url: string | null | undefined): string | null {
-  if (!url) return null
-  if (url.startsWith('ipfs://')) return `https://ipfs.io/ipfs/${url.slice(7)}`
-  if (url.startsWith('ar://')) return `https://arweave.net/${url.slice(5)}`
-  return url
-}
-
-export function getNftImageUrl(instance: ExplorerTokenInstance | null | undefined): string | null {
-  if (!instance) return null
-  const m = instance.metadata
-  return resolveMediaUrl(
-    instance.image_url ??
-      m?.image_url ??
-      m?.image ??
-      instance.animation_url ??
-      m?.animation_url ??
-      null,
+export async function counters(chain: Chain, address: string): Promise<Counters> {
+  const c = await read<{ token_holders_count: string; transfers_count: string }>(
+    chain,
+    `/tokens/${address}/counters`,
   )
+  return { holders: Number(c.token_holders_count), transfers: Number(c.transfers_count) }
+}
+
+export async function holders(chain: Chain, address: string): Promise<Holder[]> {
+  const page = await read<Page<{ address: { hash: string }; value: string }>>(
+    chain,
+    `/tokens/${address}/holders`,
+  )
+  return page.items.map((h) => ({ address: h.address.hash.toLowerCase(), count: h.value }))
+}
+
+export async function transfers(chain: Chain, address: string): Promise<Transfer[]> {
+  const page = await read<Page<RawTransfer>>(chain, `/tokens/${address}/transfers`)
+  return page.items.map(transfer)
+}
+
+/** Chain-wide NFT movement. The feed has no type filter, so it is applied here. */
+export async function activity(chain: Chain): Promise<Transfer[]> {
+  const page = await read<Page<RawTransfer>>(chain, '/token-transfers')
+  return page.items.filter((t) => isNft(t.token?.type)).map(transfer)
+}
+
+/**
+ * What an address holds. This is the ONE indexer route that carries an item's
+ * identity: every row names its token id.
+ */
+export async function holdings(chain: Chain, address: string): Promise<Holding[]> {
+  const page = await read<Page<{ token: RawToken; token_id: string | null; value: string }>>(
+    chain,
+    `/addresses/${address}/tokens`,
+  )
+  return page.items.map((r) => ({ token: token(r.token), id: id(r.token_id), value: r.value }))
+}
+
+export async function stats(chain: Chain): Promise<Stats> {
+  const s = await read<{
+    total_blocks: string | null
+    total_transactions: string | null
+    total_addresses: string | null
+  }>(chain, '/stats')
+  return {
+    blocks: s.total_blocks,
+    transactions: s.total_transactions,
+    addresses: s.total_addresses,
+  }
 }
