@@ -54,6 +54,14 @@ function Headline({ chain }: { chain: Chain }) {
   )
 }
 
+/**
+ * How many collections the front page carries before the full list.
+ *
+ * They arrive by name, so a short prefix is a slice of an alphabet rather than
+ * a shortlist — nothing here decides which collection deserves the front page.
+ */
+const LEAD = 10
+
 function Collections({ chain }: { chain: Chain }) {
   const { data, isLoading, isError, error } = useCollections(chain)
 
@@ -78,8 +86,8 @@ function Collections({ chain }: { chain: Chain }) {
 
   return (
     <div className="flex flex-col gap-2">
-      {data.slice(0, 10).map((token, i) => (
-        <CollectionCard key={token.address} token={token} chain={chain} rank={i + 1} />
+      {data.slice(0, LEAD).map((token) => (
+        <CollectionCard key={token.address} token={token} chain={chain} />
       ))}
     </div>
   )

@@ -18,7 +18,14 @@ export type Token = {
   type: string
   /** total_supply — for a collection, the number of items minted. */
   supply: string | null
-  holders: string | null
+  /**
+   * Rows the indexer records in its holdings table for this token: one per
+   * holder on a fungible token, one per held ITEM on a collection. So it is a
+   * holder count for an ERC-20 (verified against the resource: 11 rows, 11
+   * distinct addresses) and is not one for an ERC-721 (Lux Genesis reads 3
+   * across two addresses). Only a screen that knows the standard may print it.
+   */
+  holdings: string | null
   decimals: string | null
   icon: string | null
 }
@@ -42,7 +49,16 @@ export type Holding = {
   value: string
 }
 
-export type Holder = { address: string; count: string }
+export type Holder = { address: string; count: number }
+
+/**
+ * The holders read, and whether the indexer served all of it.
+ *
+ * The resource pages at fifty rows and reports `next_page_params: null` on the
+ * page that fills, so a full page cannot be told from a complete one. `whole`
+ * is false there and a screen says "at least" rather than a flat count.
+ */
+export type Holders = { list: Holder[]; whole: boolean }
 
 export type Counters = { holders: number; transfers: number }
 
@@ -66,6 +82,8 @@ async function read<T>(chain: Chain, path: string): Promise<T> {
  * The indexer names a token's address `address_hash` under /tokens and
  * `address` under /addresses/{hash}/tokens. Both shapes are normalised here,
  * once, so nothing above this file has to know which endpoint it came from.
+ *
+ * `holders_count` arrives as `holdings`, which is what it counts. See the field.
  */
 type RawToken = {
   address_hash?: string
@@ -85,7 +103,7 @@ const token = (t: RawToken): Token => ({
   symbol: t.symbol,
   type: t.type,
   supply: t.total_supply,
-  holders: t.holders_count ?? null,
+  holdings: t.holders_count ?? null,
   decimals: t.decimals,
   icon: t.icon_url,
 })
@@ -129,11 +147,17 @@ export async function tokens(chain: Chain): Promise<Token[]> {
 /** The NFT collections among them. The indexer ignores `?type=`. */
 export async function collections(chain: Chain, search?: string): Promise<Token[]> {
   const q = search?.trim().toLowerCase()
-  return (await tokens(chain)).filter(
-    (t) =>
-      isNft(t.type) &&
-      (!q || `${t.name ?? ''} ${t.symbol ?? ''} ${t.address}`.toLowerCase().includes(q)),
-  )
+  return (await tokens(chain))
+    .filter(
+      (t) =>
+        isNft(t.type) &&
+        (!q || `${t.name ?? ''} ${t.symbol ?? ''} ${t.address}`.toLowerCase().includes(q)),
+    )
+    // The indexer answers in its own order, which is by holder count. Printing
+    // that unlabelled ranks one collection above another on a figure nobody
+    // asked to sort by, so the list arrives by name and any order a reader
+    // wants is one they chose.
+    .sort((a, b) => (a.name ?? a.address).localeCompare(b.name ?? b.address))
 }
 
 export async function collection(chain: Chain, address: string): Promise<Token> {
@@ -148,13 +172,37 @@ export async function counters(chain: Chain, address: string): Promise<Counters>
   return { holders: Number(c.token_holders_count), transfers: Number(c.transfers_count) }
 }
 
-export async function holders(chain: Chain, address: string): Promise<Holder[]> {
+/**
+ * THE HOLDERS RESOURCE IS ONE ROW PER HOLDING, NOT ONE PER HOLDER.
+ *
+ * On an ERC-20 the two coincide and the rows are distinct. On a collection they
+ * do not: Lux Genesis returns three rows for two addresses, and the Uniswap
+ * position manager returns fifty rows that are all the SAME address, one per
+ * token it holds. Printing them as they arrive draws one holder fifty times and
+ * calls it fifty holders.
+ *
+ * So the rows are folded by address here, which is also what makes a holder
+ * count countable: `list.length` is the number of addresses, and `count` is how
+ * many of the collection each one holds.
+ */
+export async function holders(chain: Chain, address: string): Promise<Holders> {
   const page = await read<Page<{ address: { hash: string }; value: string }>>(
     chain,
     `/tokens/${address}/holders`,
   )
-  return page.items.map((h) => ({ address: h.address.hash.toLowerCase(), count: h.value }))
+  const held = new Map<string, number>()
+  for (const row of page.items) {
+    const hash = row.address.hash.toLowerCase()
+    held.set(hash, (held.get(hash) ?? 0) + Number(row.value))
+  }
+  return {
+    list: [...held].map(([address, count]) => ({ address, count })).sort((a, b) => b.count - a.count),
+    whole: page.items.length < PAGE,
+  }
 }
+
+/** Rows the indexer serves in one page. A full page may not be the whole set. */
+const PAGE = 50
 
 export async function transfers(chain: Chain, address: string): Promise<Transfer[]> {
   const page = await read<Page<RawTransfer>>(chain, `/tokens/${address}/transfers`)
