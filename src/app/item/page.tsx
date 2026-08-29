@@ -11,7 +11,8 @@ import { Page } from '@/components/Page'
 import { Source } from '@/components/Source'
 import { Card } from '@/components/ui/card'
 import type { ChainState } from '@/hooks/chain'
-import { useCollection, useTransferIds, useTransfers } from '@/hooks/queries'
+import type { Instance } from '@/lib/explorer'
+import { useCollection, useInstances, useTransferIds, useTransfers } from '@/hooks/queries'
 import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, GENESIS, INTERFACE, ONE, rateLabel } from '@/lib/contracts'
 import * as links from '@/lib/links'
 import { idFor } from '@/lib/logs'
@@ -82,6 +83,27 @@ function Metadata({ uri }: { uri: string }) {
   )
 }
 
+/** What the indexer holds about one item, when it holds anything. */
+function Recorded({ instance }: { instance: Instance }) {
+  return (
+    <div className="space-y-3">
+      {instance.name ? <div className="text-lg font-semibold">{instance.name}</div> : null}
+      {instance.image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={resolve(instance.image)}
+          alt={instance.name ?? `#${instance.id}`}
+          className="max-w-[420px] rounded-xl border border-border"
+        />
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          The indexer records this item and publishes no image for it.
+        </p>
+      )}
+    </div>
+  )
+}
+
 function History({ chain, address, id }: { chain: Chain; address: string; id: string }) {
   const transfers = useTransfers(chain, address)
   const ids = useTransferIds(chain, transfers.data)
@@ -133,6 +155,15 @@ function Body({ state, slug, address, id }: { state: Ready; slug: string; addres
   const chain = state.chains.find((c) => c.slug === slug)
   const token = useCollection(chain ?? state.chain, address)
 
+  // The indexer serves items per collection, not one at a time — its
+  // /instances/{id} route is unregistered and 404s — so the item is found in
+  // the collection's list. That read is the same query the collection page
+  // makes, so arriving from there costs no extra request. It is empty on every
+  // collection today; when it is not, this is where the item's own name and
+  // image come from instead of a gateway fetch.
+  const instances = useInstances(chain ?? state.chain, address)
+  const recorded = instances.data?.list.find((i) => i.id === id) ?? null
+
   const contract = { chainId: chain?.id ?? 0, address: address as `0x${string}` }
   const { data: onChain } = useReadContracts({
     allowFailure: true,
@@ -173,6 +204,7 @@ function Body({ state, slug, address, id }: { state: Ready; slug: string; addres
 
       <Card className="mb-8 max-w-[76ch] space-y-3 p-6 text-sm">
         <div>
+          {/* ownerOf is the chain answering; the indexer's owner is a copy of it. */}
           <span className="text-muted-foreground">Owner </span>
           {owner?.status === 'success' ? (
             addressUrl(chain, owner.result as string) ? (
@@ -214,12 +246,14 @@ function Body({ state, slug, address, id }: { state: Ready; slug: string; addres
         {GENESIS[chain.id] === address ? (
           <GenesisMeta chain={chain} address={address} id={id} />
         ) : null}
-        {uri?.status === 'success' ? (
+        {recorded ? (
+          <Recorded instance={recorded} />
+        ) : uri?.status === 'success' ? (
           <Metadata uri={uri.result as string} />
         ) : (
           <p className="max-w-[76ch] text-sm leading-relaxed text-muted-foreground">
-            The contract does not answer tokenURI for this id, and the indexer holds no per-item
-            record for any collection.
+            The contract does not answer tokenURI for this id, and the indexer records no item for
+            this collection.
           </p>
         )}
       </div>

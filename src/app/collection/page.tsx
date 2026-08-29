@@ -10,7 +10,14 @@ import { Source } from '@/components/Source'
 import { Stat } from '@/components/Stat'
 import { Card } from '@/components/ui/card'
 import type { ChainState } from '@/hooks/chain'
-import { useCollection, useCounters, useHolders, useTransfers, useTransferIds } from '@/hooks/queries'
+import {
+  useCollection,
+  useCounters,
+  useHolders,
+  useInstances,
+  useTransfers,
+  useTransferIds,
+} from '@/hooks/queries'
 import { ERC165_ABI, ERC2981_ABI, ERC721_ABI, INTERFACE, ONE, rateLabel } from '@/lib/contracts'
 import { idFor } from '@/lib/logs'
 import { addressUrl, type Chain } from '@/lib/registry'
@@ -77,6 +84,18 @@ function Declares({ chain, address }: { chain: Chain; address: string }) {
   )
 }
 
+/**
+ * The items in a collection, from whichever source can name them.
+ *
+ * The indexer has a resource for exactly this and serves it empty for every
+ * collection, so the list is otherwise recovered from transfer rows — one page
+ * of them, joined to the chain's own Transfer logs. That recovery is bounded
+ * and partial by construction, and the screen says so rather than presenting a
+ * slice as the collection.
+ *
+ * Reading the real resource first means this page needs no edit the day it is
+ * populated: the fallback simply stops being reached.
+ */
 function Items({
   chain,
   address,
@@ -88,45 +107,74 @@ function Items({
   name: string | null
   supply: string | null
 }) {
+  const instances = useInstances(chain, address)
+  const recorded = instances.data?.list ?? []
+
   const transfers = useTransfers(chain, address)
   const ids = useTransferIds(chain, transfers.data)
 
-  const found = useMemo(() => {
-    if (!ids.data || !transfers.data) return []
+  // Only asked when the indexer records nothing, which is every collection today.
+  const recovered = useMemo(() => {
+    if (recorded.length || !ids.data || !transfers.data) return []
     const seen = new Set<string>()
     for (const t of transfers.data) {
       const id = idFor(ids.data, t)
       if (id !== undefined) seen.add(id)
     }
     return [...seen].sort((a, b) => Number(BigInt(a) - BigInt(b)))
-  }, [ids.data, transfers.data])
+  }, [recorded.length, ids.data, transfers.data])
 
-  if (transfers.isLoading || ids.isLoading)
-    return <Card className="p-6 text-sm text-muted-foreground">Reading transfers…</Card>
+  if (instances.isLoading || (!recorded.length && (transfers.isLoading || ids.isLoading)))
+    return <Card className="p-6 text-sm text-muted-foreground">Reading items…</Card>
 
-  if (!found.length)
+  if (recorded.length)
+    return (
+      <>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
+          {recorded.map((i) => (
+            <ItemCard
+              key={i.id}
+              chain={chain}
+              address={address}
+              id={i.id}
+              collection={name}
+              title={i.name}
+              image={i.image}
+            />
+          ))}
+        </div>
+        {!instances.data?.whole ? (
+          <p className="mt-4 max-w-[76ch] text-[13px] leading-relaxed text-muted-foreground">
+            The indexer served a full page and reported no next page, so this is the part of the
+            collection it will hand over rather than all of it.
+          </p>
+        ) : null}
+      </>
+    )
+
+  if (!recovered.length)
     return (
       <Card className="max-w-[76ch] p-6 text-sm leading-relaxed text-muted-foreground">
-        No item id could be read. The indexer never populates its per-item resource for any
-        collection, so ids come back from the chain&rsquo;s own Transfer logs, and that read either
-        found nothing in range or the chain has no browser-reachable node.
+        No item id could be read. The indexer answers its per-item resource with an empty list for
+        every collection, so ids come back from the chain&rsquo;s own Transfer logs instead, and
+        that read either found nothing in range or the chain has no browser-reachable node.
       </Card>
     )
 
-  const whole = supply !== null && found.length >= Number(supply)
+  const whole = supply !== null && recovered.length >= Number(supply)
 
   return (
     <>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-3">
-        {found.map((id) => (
+        {recovered.map((id) => (
           <ItemCard key={id} chain={chain} address={address} id={id} collection={name} />
         ))}
       </div>
       {!whole ? (
         <p className="mt-4 max-w-[76ch] text-[13px] leading-relaxed text-muted-foreground">
-          {found.length} of {supply ?? 'an unreported number of'} items. The indexer serves one page
-          of transfers and holds no per-item record, so this is what could be read back from the
-          logs, not the whole collection.
+          {recovered.length} of {supply ?? 'an unreported number of'} items. The indexer records no
+          item for this collection, so these are the ids that could be read back from one page of
+          transfer logs, not the whole collection.
         </p>
       ) : null}
     </>
