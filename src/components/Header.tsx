@@ -7,6 +7,7 @@ import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 import { Button } from '@/components/ui/button'
 import { useChain } from '@/hooks/chain'
+import { here } from '@/lib/links'
 import { cn, shortenAddress } from '@/lib/utils'
 
 // The chrome is `AppNav` from @luxfi/ui — brand, org switcher, links, settings
@@ -81,7 +82,7 @@ export function Header() {
   return (
     <AppNav
       brand="Lux Market"
-      links={LINKS.map((l) => ({ ...l, active: pathname === l.href || pathname.startsWith(`${l.href}/`) }))}
+      links={LINKS.map((l) => ({ ...l, active: here(pathname, l.href) }))}
     >
       <ChainSelector />
       {/* wagmi mounts only once the registry has named the chains it can reach. */}
