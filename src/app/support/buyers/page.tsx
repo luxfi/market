@@ -68,7 +68,7 @@ export default function BuyersPage() {
         never have to take our word for any of it.
       </P>
       <P>
-        The chains publish JSON-RPC at <code className="font-mono text-xs">/v1/bc/C/rpc</code> on
+        The chains publish JSON-RPC at <code className="font-mono text-xs">/v1/chain/C/rpc</code> on
         each network&rsquo;s API host. Calling{' '}
         <code className="font-mono text-xs">eth_getCode</code> on an address tells you whether a
         contract exists there at all, and an empty result means nothing is deployed no matter what
