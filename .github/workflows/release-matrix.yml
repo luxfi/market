@@ -22,7 +22,7 @@ jobs:
           - id: linux-amd64
             runner: linux-amd64
           - id: linux-arm64
-            runner: luxfi-linux-arm64
+            runner: linux-arm64
           - id: windows-amd64
             runner: luxfi-windows-amd64
     runs-on: ${{ matrix.target.runner }}
