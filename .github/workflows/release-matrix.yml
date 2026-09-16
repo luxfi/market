@@ -20,7 +20,7 @@ jobs:
           - id: macos-arm64
             runner: luxfi-macos-arm64
           - id: linux-amd64
-            runner: luxfi-linux-amd64
+            runner: linux-amd64
           - id: linux-arm64
             runner: luxfi-linux-arm64
           - id: windows-amd64
