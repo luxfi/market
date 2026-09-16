@@ -18,7 +18,7 @@ jobs:
       matrix:
         target:
           - id: macos-arm64
-            runner: luxfi-macos-arm64
+            runner: darwin-arm64
           - id: linux-amd64
             runner: linux-amd64
           - id: linux-arm64
