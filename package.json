@@ -8,7 +8,7 @@
     "dev": "next dev --port 3100",
     "build": "next build",
     "start": "next start --port 3100",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node_modules/tsgo/bin/tsc --noEmit --incremental false",
     "lint": "next lint"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "tailwindcss": "4.1.18",
+    "tsgo": "npm:typescript@7.0.2",
     "typescript": "6.0.3"
   },
   "packageManager": "pnpm@9.15.0"
