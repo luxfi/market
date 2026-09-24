@@ -1,0 +1,27 @@
+name: CI/CD
+
+# Triggers and the import, nothing else: hanzo.yml says what is built, and
+# hanzoai/ci builds it (images through the build door, one BuildKit Job per
+# platform).
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+# A called workflow cannot exceed its caller's token: the image push and a
+# tag's release assets are the two scopes the pipeline writes with.
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cicd:
+    uses: hanzoai/ci/.github/workflows/build.yml@v2
+    secrets: inherit
