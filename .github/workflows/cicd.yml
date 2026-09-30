@@ -14,6 +14,7 @@ on:
 # A called workflow cannot exceed its caller's token: the image push and a
 # tag's release assets are the two scopes the pipeline writes with.
 permissions:
+  id-token: write
   contents: write
   packages: write
 
